@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
             final Document finalDocument = document;
             MainActivity.this.runOnUiThread(() -> {
+                Log.d("HSING", "My Log");
                 String bookMyShowUrl = getBookMyShowUrl(finalDocument);
                 webView.loadUrl(bookMyShowUrl.substring(0, bookMyShowUrl.indexOf(AMPERSAND)));
             });

@@ -43,35 +43,24 @@ public class MainActivity extends AppCompatActivity {
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                makeASearchRequest(query.getText().toString());
-            }
-        });
+        submit.setOnClickListener(view -> makeASearchRequest(query.getText().toString()));
     }
 
     private void makeASearchRequest(final String query) {
         if(TextUtils.isEmpty(query)) return;
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                Document document = null;
-                try {
-                    document = Jsoup.connect(GOOGLE_SEARCH_URL + URLEncoder.encode(query, CHARSET)).userAgent(USER_AGENT).get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                final Document finalDocument = document;
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String bookMyShowUrl = getBookMyShowUrl(finalDocument);
-                        webView.loadUrl(bookMyShowUrl.substring(0, bookMyShowUrl.indexOf(AMPERSAND)));
-                    }
-                });
+        AsyncTask.execute(() -> {
+            Document document = null;
+            try {
+                document = Jsoup.connect(GOOGLE_SEARCH_URL + URLEncoder.encode(query, CHARSET)).userAgent(USER_AGENT).get();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            final Document finalDocument = document;
+            MainActivity.this.runOnUiThread(() -> {
+                String bookMyShowUrl = getBookMyShowUrl(finalDocument);
+                webView.loadUrl(bookMyShowUrl.substring(0, bookMyShowUrl.indexOf(AMPERSAND)));
+            });
         });
     }
 

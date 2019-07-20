@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="cheema.hardeep.sahibdeep.brotherhood">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <dist:module dist:instant="true" />
 
@@ -13,7 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".activities.HomeActivity"
+            android:label="@string/title_activity_home"/>
+        <activity android:name=".activities.ActorActivity" />
+        <activity android:name=".activities.GenreActivity" />
+        <activity android:name=".activities.NameActivity" />
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

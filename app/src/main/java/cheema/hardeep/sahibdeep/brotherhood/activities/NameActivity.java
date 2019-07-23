@@ -1,6 +1,7 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
+import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 
 public class NameActivity extends AppCompatActivity {
+
     View exit, genre;
     EditText name;
     TextView genreText;
@@ -48,9 +51,12 @@ public class NameActivity extends AppCompatActivity {
                 }
             });
         }
+
+        SharedPreferenceProvider.saveUserName(this, userName);
     }
 
     TextWatcher userNameWatcher = new TextWatcher() {
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 

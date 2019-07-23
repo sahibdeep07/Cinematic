@@ -35,6 +35,8 @@ public class NameActivity extends AppCompatActivity {
         nextImage = findViewById(R.id.nextImage);
         name.addTextChangedListener(userNameWatcher);
 
+        Toast.makeText(this, SharedPreferenceProvider.getUserName(this), Toast.LENGTH_SHORT).show();
+
         //click listener
 
         exit.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +70,7 @@ public class NameActivity extends AppCompatActivity {
                         Intent intent = new Intent(NameActivity.this, GenreActivity.class);
                         startActivity(intent);
                         SharedPreferenceProvider.saveUserName(NameActivity.this, userName);
+                        Toast.makeText(NameActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {

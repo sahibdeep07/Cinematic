@@ -51,8 +51,6 @@ public class NameActivity extends AppCompatActivity {
                 }
             });
         }
-
-        SharedPreferenceProvider.saveUserName(this, userName);
     }
 
     TextWatcher userNameWatcher = new TextWatcher() {
@@ -69,6 +67,7 @@ public class NameActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(NameActivity.this, GenreActivity.class);
                         startActivity(intent);
+                        SharedPreferenceProvider.saveUserName(NameActivity.this, userName);
                     }
                 });
             } else {

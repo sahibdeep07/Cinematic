@@ -20,7 +20,7 @@
         <activity android:name=".activities.ActorActivity" />
         <activity android:name=".activities.GenreActivity" />
         <activity android:name=".activities.NameActivity" />
-        <activity android:name=".activities.SplashActivity" >
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

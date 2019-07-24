@@ -21,7 +21,6 @@ public class NameActivity extends AppCompatActivity {
     EditText name;
     TextView genreText;
     ImageView nextImage;
-    String userName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +32,10 @@ public class NameActivity extends AppCompatActivity {
         name = findViewById(R.id.nameBox);
         genreText = findViewById(R.id.genreText);
         nextImage = findViewById(R.id.nextImage);
-        name.addTextChangedListener(userNameWatcher);
 
         Toast.makeText(this, SharedPreferenceProvider.getUserName(this), Toast.LENGTH_SHORT).show();
 
-        //click listener
+        //click listeners
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,45 +43,20 @@ public class NameActivity extends AppCompatActivity {
                 finish();
             }
         });
-        if (userName.isEmpty()) {
+
             genre.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(NameActivity.this, "Enter Name", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    TextWatcher userNameWatcher = new TextWatcher() {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            userName = name.getText().toString().trim();
-            if (!userName.isEmpty()) {
-                genre.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    if(!name.getText().toString().trim().isEmpty()) {
                         Intent intent = new Intent(NameActivity.this, GenreActivity.class);
                         startActivity(intent);
-                        SharedPreferenceProvider.saveUserName(NameActivity.this, userName);
+                        SharedPreferenceProvider.saveUserName(NameActivity.this, name.getText().toString());
                         Toast.makeText(NameActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                     }
-                });
-            } else {
-                genre.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(NameActivity.this, "Please enter your name", Toast.LENGTH_SHORT).show();
+                    else{
+                        Toast.makeText(NameActivity.this,  "Please enter your name.", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) { }
-    };
+                }
+            });
+    }
 }

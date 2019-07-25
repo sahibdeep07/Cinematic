@@ -1,15 +1,11 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
@@ -19,44 +15,30 @@ public class NameActivity extends AppCompatActivity {
 
     View exit, genre;
     EditText name;
-    TextView genreText;
-    ImageView nextImage;
+
+    public static Intent createIntent(Context context) {
+        return new Intent(context, NameActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_name);
-        exit = findViewById(R.id.exitView);
-        genre = findViewById(R.id.genreView);
+        exit = findViewById(R.id.exitBackground);
+        genre = findViewById(R.id.genreBackground);
         name = findViewById(R.id.nameBox);
-        genreText = findViewById(R.id.genreText);
-        nextImage = findViewById(R.id.nextImage);
+        exit.setOnClickListener(v -> finish());
+        genre.setOnClickListener(v -> handleGenreClick());
+    }
 
-        Toast.makeText(this, SharedPreferenceProvider.getUserName(this), Toast.LENGTH_SHORT).show();
-
-        //click listeners
-
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-            genre.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!name.getText().toString().trim().isEmpty()) {
-                        Intent intent = new Intent(NameActivity.this, GenreActivity.class);
-                        startActivity(intent);
-                        SharedPreferenceProvider.saveUserName(NameActivity.this, name.getText().toString());
-                        Toast.makeText(NameActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(NameActivity.this,  "Please enter your name.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+    private void handleGenreClick() {
+        String input = name.getText().toString().trim();
+        if (!input.isEmpty()) {
+            SharedPreferenceProvider.saveUserName(NameActivity.this, input);
+            startActivity(GenreActivity.createIntent(this));
+            finish();
+        } else {
+            Toast.makeText(NameActivity.this, "Please enter your name.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -9,16 +8,15 @@ import cheema.hardeep.sahibdeep.brotherhood.R;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private static final int TRANSITION_TIME = 2000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, NameActivity.class));
-                SplashActivity.this.finish();
-            }
-        },2000);
+        new Handler().postDelayed(() -> {
+            startActivity(NameActivity.createIntent(this));
+            SplashActivity.this.finish();
+        }, TRANSITION_TIME);
     }
 }

@@ -36,7 +36,6 @@ public class NameActivity extends AppCompatActivity {
         if (!input.isEmpty()) {
             SharedPreferenceProvider.saveUserName(NameActivity.this, input);
             startActivity(GenreActivity.createIntent(this));
-            finish();
         } else {
             Toast.makeText(NameActivity.this, "Please enter your name.", Toast.LENGTH_SHORT).show();
         }

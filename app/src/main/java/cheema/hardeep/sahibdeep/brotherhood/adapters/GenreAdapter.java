@@ -30,8 +30,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     @Override
     public GenreViewHolder onCreateViewHolder( ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.genre_icon_design, viewGroup, false);
-        GenreViewHolder genreViewHolder = new GenreViewHolder(v);
-        return genreViewHolder;
+        return new GenreViewHolder(v);
     }
 
     @Override
@@ -55,7 +54,8 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     class GenreViewHolder extends RecyclerView.ViewHolder{
         ImageView icon;
         TextView name;
-        public GenreViewHolder(View itemView) {
+
+        GenreViewHolder(View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.genreIcon);
             name = itemView.findViewById(R.id.genreName);

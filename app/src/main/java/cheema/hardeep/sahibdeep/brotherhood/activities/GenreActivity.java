@@ -41,7 +41,7 @@ public class GenreActivity extends AppCompatActivity {
         genre.setOnClickListener(v -> handleGenreClick());
         actors.setOnClickListener(v -> handleActorsClick());
         recyclerView = findViewById(R.id.genreRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         genreAdapter = new GenreAdapter();
         recyclerView.setAdapter(genreAdapter);
         requestGenres();

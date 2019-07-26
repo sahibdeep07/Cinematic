@@ -1,5 +1,6 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +19,15 @@ import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 
 public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHolder> {
 
-    ArrayList<Genre> genreList = new ArrayList();
+    private ArrayList<Genre> genreList = new ArrayList();
 
     public void update(List<Genre> genreList){
         this.genreList.addAll(genreList);
         notifyDataSetChanged();
+    }
+
+    public ArrayList<Genre> getUpdatedList() {
+        return genreList;
     }
 
     @NonNull
@@ -37,12 +42,18 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
         Genre genre = genreList.get(i);
         genreViewHolder.icon.setImageResource(genre.getIcon());
         genreViewHolder.name.setText(genre.getName());
+        setImageColor(genreViewHolder.icon, genre.isSelected());
 
         genreViewHolder.icon.setOnClickListener(v -> {
             genre.setSelected(!genre.isSelected());
-            int color = genre.isSelected() ? R.color.colorAccent : android.R.color.darker_gray;
-            genreViewHolder.icon.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+            setImageColor(genreViewHolder.icon, genre.isSelected());
         });
+    }
+
+    private void setImageColor(ImageView imageView, boolean isSelected) {
+        int colors = isSelected ? imageView.getResources().getColor(R.color.colorAccentLight)
+                : imageView.getResources().getColor(R.color.colorPrimaryLight);
+        imageView.setColorFilter(colors);
     }
 
     @Override

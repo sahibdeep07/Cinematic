@@ -29,6 +29,7 @@ public class NameActivity extends AppCompatActivity {
         name = findViewById(R.id.nameBox);
         exit.setOnClickListener(v -> finish());
         genre.setOnClickListener(v -> handleGenreClick());
+        getSupportActionBar().hide();
     }
 
     private void handleGenreClick() {

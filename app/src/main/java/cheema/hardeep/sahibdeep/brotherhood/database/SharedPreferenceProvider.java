@@ -100,7 +100,7 @@ public class SharedPreferenceProvider {
     private static void saveUserInfo(Context context, UserInfo userInfo) {
         SharedPreferences.Editor editor = getUserInfoPreferences(context).edit();
         editor.putString(KEY_USER_INFO, gson.toJson(userInfo));
-        editor.commit();
+        editor.apply();
     }
 
 

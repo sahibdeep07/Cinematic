@@ -20,8 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/curved_top_left"
-        />
+        android:background="@drawable/curved_top_left" />
 
     <ImageView
         android:id="@+id/exitImage"
@@ -83,7 +82,7 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/exitBackground"
+        app:layout_constraintBottom_toTopOf="@id/genreBackground"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

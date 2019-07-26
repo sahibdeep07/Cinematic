@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".activities.GenreActivity">
 
+    <TextView
+        android:id="@+id/genreHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Select Genre"
+        android:textSize="24sp"
+        android:typeface="serif"
+        android:padding="12dp"
+        android:textColor="@color/primaryTextColor"
+        android:background="@drawable/top_curved_header_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
@@ -38,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="32dp"
-        android:text="Genre"
+        android:text="Name"
         android:textColor="@color/primaryTextColor"
         android:textSize="20sp"
         android:typeface="serif"
@@ -80,7 +94,7 @@
         android:id="@+id/genreRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genreHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/genreBackground"
         app:layout_constraintEnd_toEndOf="parent" />

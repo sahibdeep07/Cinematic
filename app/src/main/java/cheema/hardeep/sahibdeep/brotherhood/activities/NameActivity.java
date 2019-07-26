@@ -24,12 +24,13 @@ public class NameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name);
+        getSupportActionBar().hide();
+
         exit = findViewById(R.id.exitBackground);
         genre = findViewById(R.id.genreBackground);
         name = findViewById(R.id.nameBox);
         exit.setOnClickListener(v -> finish());
         genre.setOnClickListener(v -> handleGenreClick());
-        getSupportActionBar().hide();
     }
 
     private void handleGenreClick() {

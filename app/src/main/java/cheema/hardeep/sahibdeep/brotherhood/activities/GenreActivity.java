@@ -26,10 +26,9 @@ import retrofit2.Response;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 
 public class GenreActivity extends AppCompatActivity {
-    private static final String TITLE_BAR_NAME = "Select Genre";
 
     RecyclerView recyclerView;
-    View genre,actors;
+    View genre, actors;
     GenreAdapter genreAdapter;
     ProgressBar progressBar;
 
@@ -41,10 +40,10 @@ public class GenreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_genre);
-        setTitle(TITLE_BAR_NAME);
+        getSupportActionBar().hide();
 
         findAndInitializeViews();
-        setProgressBar();
+        setIsProgressBarVisibile(true);
         setClickListeners();
         setupRecyclerView();
         requestGenres();
@@ -57,9 +56,9 @@ public class GenreActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
     }
 
-    private void setProgressBar(){
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
+    public void setIsProgressBarVisibile(boolean visible) {
+        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     private void setClickListeners() {
@@ -77,8 +76,7 @@ public class GenreActivity extends AppCompatActivity {
         MovieApiProvider.getMovieApi().getGenre(EN_US).enqueue(new Callback<GenreResponse>() {
             @Override
             public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                setIsProgressBarVisibile(false);
                 GenreResponse genreResponse = response.body();
                 handleGenreResponse(genreResponse);
             }
@@ -92,28 +90,36 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void handleGenreResponse(GenreResponse genreResponse) {
-        for (Genre genre : genreResponse.getGenres()) { genre.setIcon(); }
+        for (Genre genre : genreResponse.getGenres()) {
+            genre.setIcon();
+        }
         genreAdapter.update(genreResponse.getGenres());
     }
 
-    public void handleNameClick(){
+    public void handleNameClick() {
         finish();
     }
 
-    public void handleActorsClick(){
+    public void handleActorsClick() {
+        ArrayList<String> sharedPreferenceGenreList = getSelectedGenreList();
+        saveSelectedGenreList(sharedPreferenceGenreList);
+    }
+
+    private ArrayList<String> getSelectedGenreList() {
         ArrayList<String> sharedPreferenceGenreList = new ArrayList<>();
-        for(int i=0; i<genreAdapter.getUpdatedList().size(); i++) {
-            Genre genre = genreAdapter.getUpdatedList().get(i);
-            if(genre.isSelected()){
+        for (Genre genre : genreAdapter.getUpdatedList()) {
+            if (genre.isSelected()) {
                 sharedPreferenceGenreList.add(genre.getName());
             }
         }
-        if(!sharedPreferenceGenreList.isEmpty()) {
+        return sharedPreferenceGenreList;
+    }
+
+    private void saveSelectedGenreList(ArrayList<String> sharedPreferenceGenreList) {
+        if (!sharedPreferenceGenreList.isEmpty()) {
             SharedPreferenceProvider.saveUserGenres(this, sharedPreferenceGenreList);
             startActivity(ActorActivity.createIntent(this));
-            finish();
-        }
-        else{
+        } else {
             Toast.makeText(this, "Please select a genre", Toast.LENGTH_SHORT).show();
         }
     }

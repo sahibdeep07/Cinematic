@@ -21,7 +21,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     ArrayList<Genre> genreList = new ArrayList();
 
     public void update(List<Genre> genreList){
-        this.genreList.clear();
         this.genreList.addAll(genreList);
         notifyDataSetChanged();
     }

@@ -42,7 +42,7 @@ public class MovieApiProvider {
      */
     public static MovieApi getMovieApi() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("")
+                .baseUrl("https://api.themoviedb.org/3/")
                 .client(createOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

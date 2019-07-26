@@ -24,6 +24,8 @@ public class NameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name);
+        getSupportActionBar().hide();
+
         exit = findViewById(R.id.exitBackground);
         genre = findViewById(R.id.genreBackground);
         name = findViewById(R.id.nameBox);
@@ -36,7 +38,6 @@ public class NameActivity extends AppCompatActivity {
         if (!input.isEmpty()) {
             SharedPreferenceProvider.saveUserName(NameActivity.this, input);
             startActivity(GenreActivity.createIntent(this));
-            finish();
         } else {
             Toast.makeText(NameActivity.this, "Please enter your name.", Toast.LENGTH_SHORT).show();
         }

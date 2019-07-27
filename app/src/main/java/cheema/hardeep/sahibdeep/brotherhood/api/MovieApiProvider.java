@@ -8,6 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieApiProvider {
 
+    private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String API_KEY_PARAMETER_NAME = "api_key";
     private static final String API_KEY = "5812e4b63553d1273a420416fddeed72";
 
@@ -42,7 +43,7 @@ public class MovieApiProvider {
      */
     public static MovieApi getMovieApi() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/")
+                .baseUrl(BASE_URL)
                 .client(createOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

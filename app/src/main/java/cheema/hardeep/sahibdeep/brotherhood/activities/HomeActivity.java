@@ -22,6 +22,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().hide();
         BottomNavigationView navView = findViewById(R.id.bottomNav);
         navView.setOnNavigationItemSelectedListener(this);
         loadFragment(new RecommendedFragment());

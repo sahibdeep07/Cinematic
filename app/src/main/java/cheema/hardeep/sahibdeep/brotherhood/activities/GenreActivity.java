@@ -101,23 +101,23 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     public void handleActorsClick() {
-        ArrayList<String> sharedPreferenceGenreList = getSelectedGenreList();
-        saveSelectedGenreList(sharedPreferenceGenreList);
+        ArrayList<String> selectedGenres = getSelectedGenreList();
+        saveSelectedGenreList(selectedGenres);
     }
 
     private ArrayList<String> getSelectedGenreList() {
-        ArrayList<String> sharedPreferenceGenreList = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
         for (Genre genre : genreAdapter.getUpdatedList()) {
             if (genre.isSelected()) {
-                sharedPreferenceGenreList.add(genre.getName());
+                result.add(genre.getName());
             }
         }
-        return sharedPreferenceGenreList;
+        return result;
     }
 
-    private void saveSelectedGenreList(ArrayList<String> sharedPreferenceGenreList) {
-        if (!sharedPreferenceGenreList.isEmpty()) {
-            SharedPreferenceProvider.saveUserGenres(this, sharedPreferenceGenreList);
+    private void saveSelectedGenreList(ArrayList<String> selectedGenreList) {
+        if (!selectedGenreList.isEmpty()) {
+            SharedPreferenceProvider.saveUserGenres(this, selectedGenreList);
             startActivity(ActorActivity.createIntent(this));
         } else {
             Toast.makeText(this, "Please select a genre", Toast.LENGTH_SHORT).show();

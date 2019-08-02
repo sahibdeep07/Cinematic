@@ -20,7 +20,7 @@ import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_UPCOMING;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
 
 public class UpcomingMovieAdapter extends RecyclerView.Adapter<UpcomingMovieAdapter.UpcomingMovieViewHolder> {
@@ -50,7 +50,7 @@ public class UpcomingMovieAdapter extends RecyclerView.Adapter<UpcomingMovieAdap
 
     private void loadImageWithGlide(String url, ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(ROUNDED_CORNER));
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(ROUNDED_CORNER_UPCOMING));
         Glide.with(imageView.getContext())
                 .load(Utilities.createImageUrl(url, SIZE_342))
                 .apply(requestOptions)

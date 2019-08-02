@@ -8,6 +8,7 @@ public class Constants {
     public static final String APP_NAME = "Brotherhood";
     public static final String EMPTY = "";
     public static final String EN_US = "en-US";
+
     public static final String DATA_DATE_FORMAT = "yyyy-MM-dd";
     public static final String DISPLAY_DATE_FORMAT = "EEEE ~ MMM d, yyyy";
     public static final String DISPLAY_DATE_WEEK_RANGE_FORMAT = "MMM d";
@@ -22,5 +23,6 @@ public class Constants {
     public static final String SIZE_780 = "w780";
     public static final String SIZE_ORIGINAL = "original";
 
-    public static final int ROUNDED_CORNER = 20;
+    public static final int ROUNDED_CORNER_ACTORS = 100;
+    public static final int ROUNDED_CORNER_UPCOMING = 20;
 }

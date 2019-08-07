@@ -7,16 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
 public class Actor {
-
-    public Actor(Boolean adult, Long id, String name, Double popularity, String profilePath, boolean selected) {
-        this.adult = adult;
-        this.id = id;
-        this.name = name;
-        this.popularity = popularity;
-        this.profilePath = profilePath;
-        this.selected = selected;
-    }
-
     @Expose
     private Boolean adult;
     @Expose

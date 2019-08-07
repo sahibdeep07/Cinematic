@@ -1,6 +1,5 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -19,19 +18,24 @@ import java.util.List;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
+import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_ACTORS;
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_154;
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_185;
+
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_92;
 
 public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHolder> {
 
-    List<Actor> actorList = new ArrayList<>();
+    private ArrayList<Actor> actorList = new ArrayList<>();
 
-    public ActorAdapter(List<Actor> actorList){
-        this.actorList = actorList;
+    public void updateList(List<Actor> actorList){
+        this.actorList.clear();
+        this.actorList.addAll(actorList);
+    }
+
+
+    public ArrayList<Actor> getUpdatedList() {
+        return actorList;
     }
 
     @Override

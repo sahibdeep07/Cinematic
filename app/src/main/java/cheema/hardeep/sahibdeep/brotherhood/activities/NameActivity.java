@@ -27,7 +27,7 @@ public class NameActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         exit = findViewById(R.id.exitBackground);
-        genre = findViewById(R.id.genreBackground);
+        genre = findViewById(R.id.nameBackground);
         name = findViewById(R.id.nameBox);
         exit.setOnClickListener(v -> finish());
         genre.setOnClickListener(v -> handleGenreClick());

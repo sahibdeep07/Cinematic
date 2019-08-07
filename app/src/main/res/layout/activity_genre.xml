@@ -28,7 +28,7 @@
         app:layout_constraintGuide_percent="0.30"/>
 
     <View
-        android:id="@+id/genreBackground"
+        android:id="@+id/nameBackground"
         android:layout_width="0dp"
         android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
         app:srcCompat="@drawable/icon_left" />
 
     <TextView
-        android:id="@+id/exitText"
+        android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -68,7 +68,7 @@
         android:background="@drawable/curved_top_right"/>
 
     <TextView
-        android:id="@+id/genreText"
+        android:id="@+id/ActorText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -94,10 +94,12 @@
         android:id="@+id/genreRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/genreHeader"
+        app:layout_constraintBottom_toTopOf="@id/nameBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/genreBackground"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/genreHeader"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
         android:id="@+id/progressBar"

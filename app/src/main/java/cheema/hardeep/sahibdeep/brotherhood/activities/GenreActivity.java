@@ -50,7 +50,7 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void findAndInitializeViews() {
-        genre = findViewById(R.id.genreBackground);
+        genre = findViewById(R.id.nameBackground);
         actors = findViewById((R.id.actorsBackground));
         recyclerView = findViewById(R.id.genreRecyclerView);
         progressBar = findViewById(R.id.progressBar);
@@ -92,7 +92,7 @@ public class GenreActivity extends AppCompatActivity {
     private void handleGenreResponse(GenreResponse genreResponse) {
         for (Genre genre : genreResponse.getGenres()) {
             genre.setIcon();
-        }
+    }
         genreAdapter.update(genreResponse.getGenres());
     }
 

@@ -1,5 +1,7 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,10 @@ import cheema.hardeep.sahibdeep.brotherhood.fragments.SettingsFragment;
 import cheema.hardeep.sahibdeep.brotherhood.fragments.UpcomingFragment;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    public static Intent createIntent(Context context) {
+        return new Intent(context, HomeActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextWatcher;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     private ArrayList<Genre> genreList = new ArrayList();
 
     public void update(List<Genre> genreList){
+        this.genreList.clear();
         this.genreList.addAll(genreList);
         notifyDataSetChanged();
     }

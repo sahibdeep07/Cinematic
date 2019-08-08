@@ -82,7 +82,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideLine" />
     <View
-        android:id="@+id/nameBackground"
+        android:id="@+id/moveToName"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:background="@drawable/curved_top_right"
@@ -91,7 +91,7 @@
         app:layout_constraintStart_toStartOf="@id/guideLine" />
 
     <TextView
-        android:id="@+id/genreText"
+        android:id="@+id/nextButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"

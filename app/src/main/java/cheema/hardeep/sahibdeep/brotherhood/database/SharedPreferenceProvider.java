@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
+import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.UserInfo;
 
 
@@ -49,7 +51,7 @@ public class SharedPreferenceProvider {
      * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
      * provided genres and save it
      */
-    public static void saveUserGenres(Context context, List<String> genres) {
+    public static void saveUserGenres(Context context, List<Genre> genres) {
         UserInfo userInfo = getUserInfo(context);
         userInfo.setGenres(genres);
         saveUserInfo(context, userInfo);
@@ -60,7 +62,7 @@ public class SharedPreferenceProvider {
      * This method get the UserInfo object from shared preference if it exist then return the genres
      * from object
      */
-    public static List<String> getUserGenres(Context context) {
+    public static List<Genre> getUserGenres(Context context) {
         return getUserInfo(context).getGenres();
     }
 
@@ -70,7 +72,7 @@ public class SharedPreferenceProvider {
      * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
      * provided actors and save it
      */
-    public static void saveUserActors(Context context, List<String> actors) {
+    public static void saveUserActors(Context context, List<Actor> actors) {
         UserInfo userInfo = getUserInfo(context);
         userInfo.setActors(actors);
         saveUserInfo(context, userInfo);
@@ -81,7 +83,7 @@ public class SharedPreferenceProvider {
      * This method get the UserInfo object from shared preference if it exist then return the actors
      * from object
      */
-    public static List<String> getUserActors(Context context) {
+    public static List<Actor> getUserActors(Context context) {
         return getUserInfo(context).getActors();
     }
 

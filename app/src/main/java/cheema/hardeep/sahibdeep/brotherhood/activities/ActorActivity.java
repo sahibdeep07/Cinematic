@@ -19,7 +19,6 @@ import cheema.hardeep.sahibdeep.brotherhood.api.MovieApiProvider;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
-import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,7 +77,7 @@ public class ActorActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ActorResponse> call, Response<ActorResponse> response) {
                 setIsProgressBarVisible(false);
-                actorAdapter.updateList(response.body().getActors());
+                actorAdapter.update(response.body().getActors());
             }
 
             @Override
@@ -89,28 +88,27 @@ public class ActorActivity extends AppCompatActivity {
         });
     }
 
-    void handleHomeClick(){
-        ArrayList<String> selectedActors = getSelectedActorslist();
+    private void handleHomeClick(){
+        ArrayList<Actor> selectedActors = getSelectedActorsList();
         saveSelectedActors(selectedActors);
     }
 
-    ArrayList<String> getSelectedActorslist(){
-        ArrayList<String> result = new ArrayList<>();
+    private ArrayList<Actor> getSelectedActorsList() {
+        ArrayList<Actor> result = new ArrayList<>();
         for (Actor actor : actorAdapter.getUpdatedList()) {
             if (actor.isSelected()) {
-                result.add(actor.getName());
+                result.add(actor);
             }
         }
         return result;
     }
 
-    void saveSelectedActors(ArrayList selectedActors){
+    private void saveSelectedActors(ArrayList<Actor> selectedActors){
         if (!selectedActors.isEmpty()) {
-            SharedPreferenceProvider.saveUserGenres(this, selectedActors);
+            SharedPreferenceProvider.saveUserActors(this, selectedActors);
             startActivity(HomeActivity.createIntent(this));
         } else {
             Toast.makeText(this, "Please select an actor", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

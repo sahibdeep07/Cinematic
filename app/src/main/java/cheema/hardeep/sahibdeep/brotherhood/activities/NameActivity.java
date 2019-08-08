@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.models.GenreScreenType;
 
 public class NameActivity extends AppCompatActivity {
 
@@ -27,7 +28,7 @@ public class NameActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         exit = findViewById(R.id.exitBackground);
-        genre = findViewById(R.id.nameBackground);
+        genre = findViewById(R.id.moveToName);
         name = findViewById(R.id.nameBox);
         exit.setOnClickListener(v -> finish());
         genre.setOnClickListener(v -> handleGenreClick());
@@ -37,7 +38,7 @@ public class NameActivity extends AppCompatActivity {
         String input = name.getText().toString().trim();
         if (!input.isEmpty()) {
             SharedPreferenceProvider.saveUserName(NameActivity.this, input);
-            startActivity(GenreActivity.createIntent(this));
+            startActivity(GenreActivity.createIntent(this, GenreScreenType.FIRST_SCREEN));
         } else {
             Toast.makeText(NameActivity.this, "Please enter your name.", Toast.LENGTH_SHORT).show();
         }

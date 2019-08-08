@@ -21,18 +21,18 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/genreGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.30"/>
 
     <View
-        android:id="@+id/nameBackground"
+        android:id="@+id/moveToName"
         android:layout_width="0dp"
         android:layout_height="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="@id/genreGuideLine"
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/curved_top_left" />
 
@@ -57,18 +57,19 @@
         android:textSize="20sp"
         android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline" />
+        app:layout_constraintEnd_toStartOf="@id/genreGuideLine" />
+
     <View
-        android:id="@+id/actorsBackground"
+        android:id="@+id/moveToActorOrSave"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@id/genreGuideLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/curved_top_right"/>
 
     <TextView
-        android:id="@+id/ActorText"
+        android:id="@+id/genreNextButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -78,7 +79,7 @@
         android:textSize="20sp"
         android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline" />
+        app:layout_constraintStart_toStartOf="@id/genreGuideLine" />
 
     <ImageView
         android:id="@+id/nextImage"
@@ -94,7 +95,7 @@
         android:id="@+id/genreRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/nameBackground"
+        app:layout_constraintBottom_toTopOf="@id/moveToName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

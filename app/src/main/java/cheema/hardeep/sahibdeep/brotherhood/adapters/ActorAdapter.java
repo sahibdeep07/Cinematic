@@ -27,11 +27,11 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
 
     private ArrayList<Actor> actorList = new ArrayList<>();
 
-    public void updateList(List<Actor> actorList){
+    public void update(List<Actor> actorList){
         this.actorList.clear();
         this.actorList.addAll(actorList);
+        notifyDataSetChanged();
     }
-
 
     public ArrayList<Actor> getUpdatedList() {
         return actorList;
@@ -48,20 +48,15 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         Actor actor = actorList.get(i);
         actorViewHolder.name.setText(actor.getName());
 
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.circleCropTransform();
         Glide.with(actorViewHolder.image.getContext())
                 .load(Utilities.createImageUrl(actor.getProfilePath(), SIZE_92))
-                .apply(requestOptions)
+                .apply(RequestOptions.circleCropTransform())
                 .into(actorViewHolder.image);
         setImageColor(actorViewHolder.image, actor.isSelected());
 
-        actorViewHolder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actor.setSelected(!actor.isSelected());
-                setImageColor(actorViewHolder.image, actor.isSelected());
-            }
+        actorViewHolder.image.setOnClickListener(v -> {
+            actor.setSelected(!actor.isSelected());
+            setImageColor(actorViewHolder.image, actor.isSelected());
         });
     }
 
@@ -70,7 +65,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         return actorList.size();
     }
 
-    public void setImageColor(ImageView imageView, boolean isSelected){
+    private void setImageColor(ImageView imageView, boolean isSelected){
         if(isSelected) imageView.setBackgroundResource(R.drawable.circular_background_selected);
         else imageView.setBackgroundResource(R.drawable.circular_background);
     }
@@ -78,6 +73,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
     class ActorViewHolder extends RecyclerView.ViewHolder{
         TextView name;
         ImageView image;
+
         public ActorViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.actorName);

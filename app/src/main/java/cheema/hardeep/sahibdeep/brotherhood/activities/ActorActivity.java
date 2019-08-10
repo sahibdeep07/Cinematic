@@ -114,7 +114,7 @@ public class ActorActivity extends AppCompatActivity {
     private void handleActorResponse(Response<ActorResponse> actorResponse) {
         setIsProgressBarVisible(false);
         List<Actor> userActors = SharedPreferenceProvider.getUserActors(this);
-        for(Actor actor : actorResponse.body().getActors()) {
+        for (Actor actor : actorResponse.body().getActors()) {
             //Pre Select Genre if already in SharedPreferences
             if (!userActors.isEmpty()) {
                 for (Actor userActor : userActors) {
@@ -149,7 +149,8 @@ public class ActorActivity extends AppCompatActivity {
 
     private void handleTransition() {
         if (SharedPreferenceProvider.isFirstLaunch(this)) {
-            startActivity(ActorActivity.createIntent(this));
+            startActivity(HomeActivity.createIntent(this));
+            SharedPreferenceProvider.saveFirstLaunchCompleted(this);
         } else {
             finish();
         }

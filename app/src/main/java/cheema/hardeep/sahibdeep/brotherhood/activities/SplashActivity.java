@@ -1,10 +1,12 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
+import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -17,7 +19,9 @@ public class SplashActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         new Handler().postDelayed(() -> {
-            startActivity(NameActivity.createIntent(SplashActivity.this));
+            Intent intent = SharedPreferenceProvider.isFirstLaunch(this)
+                    ? NameActivity.createIntent(this) : HomeActivity.createIntent(this);
+            startActivity(intent);
             finish();
         }, TRANSITION_TIME);
     }

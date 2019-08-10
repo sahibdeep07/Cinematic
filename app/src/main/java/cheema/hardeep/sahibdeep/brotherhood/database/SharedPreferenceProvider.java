@@ -38,8 +38,7 @@ public class SharedPreferenceProvider {
      * else it return true (default)
      */
     public static boolean isFirstLaunch(Context context) {
-//        return getUserInfoPreferences(context).getBoolean(KEY_FIRST_LAUNCH, true);
-        return false;
+        return getUserInfoPreferences(context).getBoolean(KEY_FIRST_LAUNCH, true);
     }
 
 

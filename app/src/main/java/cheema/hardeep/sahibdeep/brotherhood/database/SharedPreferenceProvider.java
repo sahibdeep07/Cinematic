@@ -22,7 +22,26 @@ public class SharedPreferenceProvider {
 
     private static final String USER_INFO_PREFERENCES = "user-info-preferences";
     private static final String KEY_USER_INFO = "user-info";
+    private static final String KEY_FIRST_LAUNCH = "first-launch";
     private static Gson gson = new Gson();
+
+    /**
+     * Update first launch flag in shared preferences to not show
+     * first launch screens again
+     */
+    public static void saveFirstLaunchCompleted(Context context) {
+        getUserInfoPreferences(context).edit().putBoolean(KEY_FIRST_LAUNCH, false).apply();
+    }
+
+    /**
+     * If user already been through first launch the method return false
+     * else it return true (default)
+     */
+    public static boolean isFirstLaunch(Context context) {
+//        return getUserInfoPreferences(context).getBoolean(KEY_FIRST_LAUNCH, true);
+        return false;
+    }
+
 
     /**
      * Save user name to shared preferences

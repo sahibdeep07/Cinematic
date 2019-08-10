@@ -108,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/genreRecyclerView"
+        android:id="@+id/settingsGenresRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -138,7 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="genreRecyclerView,noGenreMessage" />
+        app:constraint_referenced_ids="settingsGenresRecyclerView,noGenreMessage" />
 
     <TextView
         android:id="@+id/actorHeader"
@@ -181,7 +181,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/actorRecyclerView"
+        android:id="@+id/settingsActorsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

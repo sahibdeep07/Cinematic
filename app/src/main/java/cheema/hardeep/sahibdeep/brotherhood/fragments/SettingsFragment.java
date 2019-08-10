@@ -16,7 +16,6 @@ import cheema.hardeep.sahibdeep.brotherhood.activities.GenreActivity;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.ActorAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.GenreAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
-import cheema.hardeep.sahibdeep.brotherhood.models.GenreScreenType;
 import cheema.hardeep.sahibdeep.brotherhood.models.UserInfo;
 
 public class SettingsFragment extends Fragment {
@@ -45,25 +44,25 @@ public class SettingsFragment extends Fragment {
         username = view.findViewById(R.id.username);
         genreEdit = view.findViewById(R.id.genreEdit);
         actorEdit = view.findViewById(R.id.actorEdit);
-        genreRecyclerView = view.findViewById(R.id.genreRecyclerView);
-        actorRecyclerView = view.findViewById(R.id.actorRecyclerView);
+        genreRecyclerView = view.findViewById(R.id.settingsGenresRecyclerView);
+        actorRecyclerView = view.findViewById(R.id.settingsActorsRecyclerView);
         noGenreMessage = view.findViewById(R.id.noGenreMessage);
         noActorMessage = view.findViewById(R.id.noActorsMessage);
     }
 
     private void handleClickListeners() {
-        genreEdit.setOnClickListener(v -> startActivity(GenreActivity.createIntent(getContext(), GenreScreenType.USER_SCREEN)));
+        genreEdit.setOnClickListener(v -> startActivity(GenreActivity.createIntent(getContext())));
         actorEdit.setOnClickListener(v -> startActivity(ActorActivity.createIntent(getContext())));
     }
 
     private void setupGenreRecyclerView() {
-        genreAdapter = new GenreAdapter();
+        genreAdapter = new GenreAdapter(false);
         genreRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         genreRecyclerView.setAdapter(genreAdapter);
     }
 
     private void setupActorRecyclerView() {
-        actorAdapter = new ActorAdapter();
+        actorAdapter = new ActorAdapter(false);
         actorRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         actorRecyclerView.setAdapter(actorAdapter);
     }

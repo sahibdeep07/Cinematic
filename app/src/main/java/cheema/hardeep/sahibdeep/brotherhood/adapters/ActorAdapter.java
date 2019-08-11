@@ -26,12 +26,17 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_92;
 public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHolder> {
 
     private ArrayList<Actor> actorList = new ArrayList<>();
+    private boolean isSelectable;
 
-    public void updateList(List<Actor> actorList){
-        this.actorList.clear();
-        this.actorList.addAll(actorList);
+    public ActorAdapter(boolean isSelectable) {
+        this.isSelectable = isSelectable;
     }
 
+    public void update(List<Actor> actorList){
+        this.actorList.clear();
+        this.actorList.addAll(actorList);
+        notifyDataSetChanged();
+    }
 
     public ArrayList<Actor> getUpdatedList() {
         return actorList;
@@ -48,21 +53,22 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         Actor actor = actorList.get(i);
         actorViewHolder.name.setText(actor.getName());
 
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.circleCropTransform();
-        Glide.with(actorViewHolder.image.getContext())
-                .load(Utilities.createImageUrl(actor.getProfilePath(), SIZE_92))
-                .apply(requestOptions)
-                .into(actorViewHolder.image);
-        setImageColor(actorViewHolder.image, actor.isSelected());
+        setUpActorImage(actorViewHolder.image, actor);
 
-        actorViewHolder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(isSelectable) {
+            actorViewHolder.image.setOnClickListener(v -> {
                 actor.setSelected(!actor.isSelected());
                 setImageColor(actorViewHolder.image, actor.isSelected());
-            }
-        });
+            });
+        }
+    }
+
+    private void setUpActorImage(@NonNull ImageView imageView, Actor actor) {
+        Glide.with(imageView.getContext())
+                .load(Utilities.createImageUrl(actor.getProfilePath(), SIZE_92))
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageView);
+        setImageColor(imageView, actor.isSelected());
     }
 
     @Override
@@ -70,7 +76,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         return actorList.size();
     }
 
-    public void setImageColor(ImageView imageView, boolean isSelected){
+    private void setImageColor(ImageView imageView, boolean isSelected){
         if(isSelected) imageView.setBackgroundResource(R.drawable.circular_background_selected);
         else imageView.setBackgroundResource(R.drawable.circular_background);
     }
@@ -78,6 +84,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
     class ActorViewHolder extends RecyclerView.ViewHolder{
         TextView name;
         ImageView image;
+
         public ActorViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.actorName);

@@ -17,21 +17,19 @@
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home">
-
         </activity>
         <activity android:name=".activities.ActorActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activities.GenreActivity" >
 
         </activity>
         <activity android:name=".activities.NameActivity" />
         <activity android:name=".activities.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

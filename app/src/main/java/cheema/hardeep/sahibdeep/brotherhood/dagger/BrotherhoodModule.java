@@ -1,23 +1,23 @@
-package cheema.hardeep.sahibdeep.brotherhood.api;
+package cheema.hardeep.sahibdeep.brotherhood.dagger;
 
+import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MovieApiProvider {
+@Module
+public class BrotherhoodModule {
 
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String API_KEY_PARAMETER_NAME = "api_key";
     private static final String API_KEY = "5812e4b63553d1273a420416fddeed72";
 
-    /**
-     * This creates an OkHttpClient which get attached to Retrofit Builder
-     * OkHttpClient automatically attach API key to every request so we don't have to do it
-     * manually for each GET or POST call
-     */
-    private static OkHttpClient createOkHttpClient() {
+    @Provides
+    OkHttpClient provideOkHttpClient() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     //Intercept the outgoing request
@@ -38,16 +38,17 @@ public class MovieApiProvider {
         return okHttpClient;
     }
 
-    /**
-     * Use Retrofit to create MovieApi interface
-     */
-    public static MovieApi getMovieApi() {
-        Retrofit retrofit = new Retrofit.Builder()
+    @Provides
+    Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .client(createOkHttpClient())
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
 
+    @Provides
+    MovieApi provideMovieApi(Retrofit retrofit) {
         return retrofit.create(MovieApi.class);
     }
 }

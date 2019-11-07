@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
-import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
-import cheema.hardeep.sahibdeep.brotherhood.api.MovieApiProvider;
 
 public class RecommendedFragment extends Fragment {
 

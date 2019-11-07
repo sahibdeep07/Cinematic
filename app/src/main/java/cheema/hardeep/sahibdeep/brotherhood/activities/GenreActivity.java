@@ -13,9 +13,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.GenreAdapter;
-import cheema.hardeep.sahibdeep.brotherhood.api.MovieApiProvider;
+import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
@@ -32,6 +35,9 @@ public class GenreActivity extends AppCompatActivity {
     GenreAdapter genreAdapter;
     ProgressBar progressBar;
 
+    @Inject
+    MovieApi movieApi;
+
     public static Intent createIntent(Context context) {
         return new Intent(context, GenreActivity.class);
     }
@@ -41,6 +47,7 @@ public class GenreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_genre);
         getSupportActionBar().hide();
+        ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
 
         findAndInitializeViews();
         setIsProgressBarVisibile(true);
@@ -73,7 +80,7 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void requestGenres() {
-        MovieApiProvider.getMovieApi().getGenre(EN_US).enqueue(new Callback<GenreResponse>() {
+        movieApi.getGenre(EN_US).enqueue(new Callback<GenreResponse>() {
             @Override
             public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
                 setIsProgressBarVisibile(false);

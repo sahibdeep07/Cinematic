@@ -13,13 +13,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.ActorAdapter;
-import cheema.hardeep.sahibdeep.brotherhood.api.MovieApiProvider;
+import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
-import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +35,9 @@ public class ActorActivity extends AppCompatActivity {
     View home, genre;
     ProgressBar progressBar;
 
+    @Inject
+    MovieApi movieApi;
+
     public static Intent createIntent(Context context){
         return new Intent(context, ActorActivity.class);
     }
@@ -42,6 +47,7 @@ public class ActorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actor);
         getSupportActionBar().hide();
+        ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
 
         findViews();
         setIsProgressBarVisible(true);
@@ -74,7 +80,7 @@ public class ActorActivity extends AppCompatActivity {
     }
 
     private void requestActors() {
-        MovieApiProvider.getMovieApi().getActors(EN_US).enqueue(new Callback<ActorResponse>() {
+        movieApi.getActors(EN_US).enqueue(new Callback<ActorResponse>() {
             @Override
             public void onResponse(Call<ActorResponse> call, Response<ActorResponse> response) {
                 setIsProgressBarVisible(false);

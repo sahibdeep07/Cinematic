@@ -1,6 +1,5 @@
 package cheema.hardeep.sahibdeep.brotherhood.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,17 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.UpcomingAdapter;
-import cheema.hardeep.sahibdeep.brotherhood.api.MovieApiProvider;
-import cheema.hardeep.sahibdeep.brotherhood.models.Dates;
+import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.Upcoming;
 import cheema.hardeep.sahibdeep.brotherhood.models.UpcomingData;
@@ -40,6 +38,15 @@ public class UpcomingFragment extends Fragment {
     UpcomingAdapter upcomingAdapter;
     ArrayList<Upcoming> data = new ArrayList<>();
     boolean[] requestTracker = new boolean[PAGES];
+
+    @Inject
+    MovieApi movieApi;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((Brotherhood) getActivity().getApplication()).getBrotherhoodComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +68,7 @@ public class UpcomingFragment extends Fragment {
     private void requestUpcomingMovies() {
         for (int i = 0; i < PAGES; i++) {
             requestTracker[i] = false;
-            MovieApiProvider.getMovieApi().getUpcomingMovies(EN_US, i + 1).enqueue(getCallback(i));
+            movieApi.getUpcomingMovies(EN_US, i + 1).enqueue(getCallback(i));
         }
     }
 

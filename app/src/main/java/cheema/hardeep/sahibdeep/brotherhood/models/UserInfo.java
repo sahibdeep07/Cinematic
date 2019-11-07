@@ -6,8 +6,8 @@ import java.util.List;
 public class UserInfo {
 
     private String name = "";
-    private List<String> genres = new ArrayList<>();
-    private List<String> actors = new ArrayList<>();
+    private List<Genre> genres = new ArrayList<>();
+    private List<Actor> actors = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -17,19 +17,19 @@ public class UserInfo {
         this.name = name;
     }
 
-    public List<String> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
 
-    public List<String> getActors() {
+    public List<Actor> getActors() {
         return actors;
     }
 
-    public void setActors(List<String> actors) {
+    public void setActors(List<Actor> actors) {
         this.actors = actors;
     }
 }

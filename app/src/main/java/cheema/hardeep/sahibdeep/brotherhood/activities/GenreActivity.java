@@ -3,15 +3,19 @@ package cheema.hardeep.sahibdeep.brotherhood.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.Group;
+import android.support.constraint.Guideline;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,10 +34,18 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 
 public class GenreActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    View genre, actors;
+    private static final String SAVE = "Save";
+    private static final String ACTORS = "Actors";
+    private static final float PERCENT_30 = 0.30f;
+    private static final float PERCENT_0 = 0.00f;
+
+    RecyclerView genresRecyclerView;
+    View moveToNameBackground, moveToActorOrSaveBackground;
+    TextView moveToActorOrSav;
     GenreAdapter genreAdapter;
-    ProgressBar progressBar;
+    ProgressBar genreProgressBar;
+    Guideline genreGuideline;
+    Group nameGroup;
 
     @Inject
     MovieApi movieApi;
@@ -50,40 +62,51 @@ public class GenreActivity extends AppCompatActivity {
         ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
 
         findAndInitializeViews();
-        setIsProgressBarVisibile(true);
+        setupBottomButtonsAndGuideline();
+        setIsProgressBarVisible(true);
         setClickListeners();
         setupRecyclerView();
         requestGenres();
     }
 
     private void findAndInitializeViews() {
-        genre = findViewById(R.id.nameBackground);
-        actors = findViewById((R.id.actorsBackground));
-        recyclerView = findViewById(R.id.genreRecyclerView);
-        progressBar = findViewById(R.id.progressBar);
+        moveToNameBackground = findViewById(R.id.moveToNameBackground);
+        moveToActorOrSaveBackground = findViewById((R.id.moveToActorOrSaveBackground));
+        genresRecyclerView = findViewById(R.id.genresRecyclerView);
+        genreProgressBar = findViewById(R.id.genreProgressBar);
+        genreGuideline = findViewById(R.id.genreGuideLine);
+        moveToActorOrSav = findViewById(R.id.moveToActorsOrSave);
+        nameGroup = findViewById(R.id.nameGroup);
     }
 
-    public void setIsProgressBarVisibile(boolean visible) {
-        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
-        recyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+    private void setupBottomButtonsAndGuideline() {
+        boolean isFirstLaunch = SharedPreferenceProvider.isFirstLaunch(this);
+        nameGroup.setVisibility(isFirstLaunch ? View.VISIBLE: View.GONE);
+        genreGuideline.setGuidelinePercent(isFirstLaunch ? PERCENT_30 : PERCENT_0);
+        moveToActorOrSav.setText(isFirstLaunch ? ACTORS : SAVE);
+    }
+
+    public void setIsProgressBarVisible(boolean visible) {
+        genreProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        genresRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     private void setClickListeners() {
-        genre.setOnClickListener(v -> handleNameClick());
-        actors.setOnClickListener(v -> handleActorsClick());
+        moveToNameBackground.setOnClickListener(v -> handleNameClick());
+        moveToActorOrSaveBackground.setOnClickListener(v -> handleActorsAndSaveClick());
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        genreAdapter = new GenreAdapter();
-        recyclerView.setAdapter(genreAdapter);
+        genresRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        genreAdapter = new GenreAdapter(true);
+        genresRecyclerView.setAdapter(genreAdapter);
     }
 
     private void requestGenres() {
         movieApi.getGenre(EN_US).enqueue(new Callback<GenreResponse>() {
             @Override
             public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
-                setIsProgressBarVisibile(false);
+                setIsProgressBarVisible(false);
                 GenreResponse genreResponse = response.body();
                 handleGenreResponse(genreResponse);
             }
@@ -97,9 +120,19 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void handleGenreResponse(GenreResponse genreResponse) {
+        List<Genre> userGenres = SharedPreferenceProvider.getUserGenres(this);
         for (Genre genre : genreResponse.getGenres()) {
             genre.setIcon();
-    }
+
+            //Pre Select Genre if already in SharedPreferences
+            if (!userGenres.isEmpty()) {
+                for (Genre userGenre : userGenres) {
+                    if (genre.getId().equals(userGenre.getId())) {
+                        genre.setSelected(true);
+                    }
+                }
+            }
+        }
         genreAdapter.update(genreResponse.getGenres());
     }
 
@@ -107,27 +140,31 @@ public class GenreActivity extends AppCompatActivity {
         finish();
     }
 
-    public void handleActorsClick() {
-        ArrayList<String> selectedGenres = getSelectedGenreList();
+    public void handleActorsAndSaveClick() {
+        ArrayList<Genre> selectedGenres = getSelectedGenreList();
         saveSelectedGenreList(selectedGenres);
     }
 
-    private ArrayList<String> getSelectedGenreList() {
-        ArrayList<String> result = new ArrayList<>();
+    private ArrayList<Genre> getSelectedGenreList() {
+        ArrayList<Genre> result = new ArrayList<>();
         for (Genre genre : genreAdapter.getUpdatedList()) {
             if (genre.isSelected()) {
-                result.add(genre.getName());
+                result.add(genre);
             }
         }
         return result;
     }
 
-    private void saveSelectedGenreList(ArrayList<String> selectedGenreList) {
-        if (!selectedGenreList.isEmpty()) {
-            SharedPreferenceProvider.saveUserGenres(this, selectedGenreList);
+    private void saveSelectedGenreList(ArrayList<Genre> selectedGenreList) {
+        SharedPreferenceProvider.saveUserGenres(this, selectedGenreList);
+        handleTransition();
+    }
+
+    private void handleTransition() {
+        if(SharedPreferenceProvider.isFirstLaunch(this)) {
             startActivity(ActorActivity.createIntent(this));
         } else {
-            Toast.makeText(this, "Please select a genre", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }

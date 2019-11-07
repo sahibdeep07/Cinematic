@@ -1,6 +1,7 @@
 
 package cheema.hardeep.sahibdeep.brotherhood.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,10 +10,13 @@ public class ActorResponse {
 
     @Expose
     private Long page;
+
     @Expose
-    private List<Actor> results;
+    private List<Actor> results = new ArrayList<>();
+
     @SerializedName("total_pages")
     private Long totalPages;
+
     @SerializedName("total_results")
     private Long totalResults;
 

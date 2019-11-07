@@ -10,44 +10,34 @@
         android:id="@+id/genreHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/top_curved_header_background"
+        android:padding="12dp"
         android:text="Select Genre"
+        android:textColor="@color/primaryTextColor"
         android:textSize="24sp"
         android:typeface="serif"
-        android:padding="12dp"
-        android:textColor="@color/primaryTextColor"
-        android:background="@drawable/top_curved_header_background"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/genreGuideLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.30"/>
+        app:layout_constraintGuide_percent="0.30" />
 
     <View
-        android:id="@+id/nameBackground"
+        android:id="@+id/moveToNameBackground"
         android:layout_width="0dp"
         android:layout_height="64dp"
+        android:background="@drawable/curved_top_left"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/curved_top_left" />
-
-    <ImageView
-        android:id="@+id/exitImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/icon_left" />
+        app:layout_constraintEnd_toEndOf="@id/genreGuideLine"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/nameText"
+        android:id="@+id/moveToName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -57,18 +47,19 @@
         android:textSize="20sp"
         android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline" />
+        app:layout_constraintEnd_toStartOf="@id/genreGuideLine" />
+
     <View
-        android:id="@+id/actorsBackground"
+        android:id="@+id/moveToActorOrSaveBackground"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        app:layout_constraintStart_toStartOf="@id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/curved_top_right"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/curved_top_right"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/genreGuideLine" />
 
     <TextView
-        android:id="@+id/ActorText"
+        android:id="@+id/moveToActorsOrSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -78,7 +69,26 @@
         android:textSize="20sp"
         android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline" />
+        app:layout_constraintStart_toStartOf="@id/genreGuideLine" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/genresRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@id/moveToActorOrSaveBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genreHeader" />
+
+    <ProgressBar
+        android:id="@+id/genreProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/nextImage"
@@ -90,24 +100,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/icon_right" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/genreRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/nameBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genreHeader"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <ImageView
+        android:id="@+id/exitImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/icon_left" />
+
+    <android.support.constraint.Group
+        android:id="@+id/nameGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="exitImage,moveToName,moveToNameBackground" />
+
+    <android.support.constraint.Group
+        android:id="@+id/actorGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="nextImage,moveToActorsOrSave,moveToActorOrSaveBackground" />
 
 </android.support.constraint.ConstraintLayout>

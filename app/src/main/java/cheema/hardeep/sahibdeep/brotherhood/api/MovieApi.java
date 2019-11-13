@@ -4,7 +4,6 @@ import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
 import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
 import cheema.hardeep.sahibdeep.brotherhood.models.Upcoming;
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -17,5 +16,5 @@ public interface MovieApi {
     Observable<ActorResponse> getActors(@Query("language") String language);
 
     @GET("movie/upcoming")
-    Call<Upcoming> getUpcomingMovies(@Query("language") String language, @Query("page") int page);
+    Observable<Upcoming> getUpcomingMovies(@Query("language") String language, @Query("page") int page);
 }

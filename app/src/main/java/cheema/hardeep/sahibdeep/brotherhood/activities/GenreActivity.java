@@ -110,15 +110,16 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void requestGenres() {
-        compositeDisposable.add(movieApi.getGenre(EN_US)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
-                .doOnTerminate(() -> setIsProgressBarVisible(false))
-                .subscribe(
-                        genreResponse -> handleGenreResponse(genreResponse),
-                        throwable -> Log.e(GenreActivity.class.getSimpleName(), "onFailure: Error in getting the genres" + throwable)
-                )
+        compositeDisposable.add(
+                movieApi.getGenre(EN_US)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doOnTerminate(() -> setIsProgressBarVisible(false))
+                        .subscribe(
+                                genreResponse -> handleGenreResponse(genreResponse),
+                                throwable -> Log.e(GenreActivity.class.getSimpleName(), "onFailure: Error in getting the genres" + throwable)
+                        )
         );
     }
 

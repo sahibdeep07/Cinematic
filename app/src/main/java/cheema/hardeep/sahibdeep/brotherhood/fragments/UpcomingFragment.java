@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +26,10 @@ import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.Upcoming;
 import cheema.hardeep.sahibdeep.brotherhood.models.UpcomingData;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,14 +38,14 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 
 public class UpcomingFragment extends Fragment {
 
-    public static final int PAGES = 3;
     RecyclerView recyclerView;
     UpcomingAdapter upcomingAdapter;
-    ArrayList<Upcoming> data = new ArrayList<>();
-    boolean[] requestTracker = new boolean[PAGES];
 
     @Inject
     MovieApi movieApi;
+
+    @Inject
+    CompositeDisposable compositeDisposable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,31 +70,29 @@ public class UpcomingFragment extends Fragment {
         requestUpcomingMovies();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        compositeDisposable.clear();
+    }
+
     private void requestUpcomingMovies() {
-        for (int i = 0; i < PAGES; i++) {
-            requestTracker[i] = false;
-            movieApi.getUpcomingMovies(EN_US, i + 1).enqueue(getCallback(i));
-        }
+        compositeDisposable.add(
+                Observable.zip(
+                        movieApi.getUpcomingMovies(EN_US, 1),
+                        movieApi.getUpcomingMovies(EN_US, 2),
+                        movieApi.getUpcomingMovies(EN_US, 3),
+                        (upcoming, upcoming2, upcoming3) -> Arrays.asList(upcoming, upcoming2, upcoming3))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                upcomings -> handleUpcomingMovieData(upcomings),
+                                throwable -> Log.e(UpcomingFragment.class.getSimpleName(), throwable.getMessage())
+                        )
+        );
     }
 
-    private Callback<Upcoming> getCallback(int i) {
-        return new Callback<Upcoming>() {
-            @Override
-            public void onResponse(Call<Upcoming> call, Response<Upcoming> response) {
-                data.add(response.body());
-                requestTracker[i] = true;
-                if (allRequestsRecieved()) handleUpcomingMovieData();
-            }
-
-            @Override
-            public void onFailure(Call<Upcoming> call, Throwable t) {
-                requestTracker[i] = true;
-                Log.d(UpcomingFragment.class.getSimpleName(), t.getMessage());
-            }
-        };
-    }
-
-    private void handleUpcomingMovieData() {
+    private void handleUpcomingMovieData(List<Upcoming> data) {
         HashMap<String, ArrayList<Movie>> mapGroupedByDate = groupMovieByWeek(data);
         List<UpcomingData> adapterData = generateAdapterDataFromMap(mapGroupedByDate);
         upcomingAdapter.updateDataSet(adapterData);
@@ -123,10 +126,5 @@ public class UpcomingFragment extends Fragment {
             }
         }
         return result;
-    }
-
-    private boolean allRequestsRecieved() {
-        for (boolean b : requestTracker) if (!b) return false;
-        return true;
     }
 }

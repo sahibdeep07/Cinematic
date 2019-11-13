@@ -1,5 +1,7 @@
 package cheema.hardeep.sahibdeep.brotherhood.dagger;
 
+import com.bumptech.glide.Glide;
+
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import dagger.Module;
 import dagger.Provides;

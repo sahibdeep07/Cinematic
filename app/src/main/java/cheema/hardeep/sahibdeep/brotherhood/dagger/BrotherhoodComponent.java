@@ -1,6 +1,7 @@
 package cheema.hardeep.sahibdeep.brotherhood.dagger;
 
 import cheema.hardeep.sahibdeep.brotherhood.activities.ActorActivity;
+import cheema.hardeep.sahibdeep.brotherhood.activities.DetailActivity;
 import cheema.hardeep.sahibdeep.brotherhood.activities.GenreActivity;
 import cheema.hardeep.sahibdeep.brotherhood.fragments.NowPlayingFragment;
 import cheema.hardeep.sahibdeep.brotherhood.fragments.UpcomingFragment;
@@ -16,4 +17,6 @@ public interface BrotherhoodComponent {
     void inject(UpcomingFragment upcomingFragment);
 
     void inject(NowPlayingFragment nowPlayingFragment);
+
+    void inject(DetailActivity detailActivity);
 }

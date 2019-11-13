@@ -3,7 +3,7 @@ package cheema.hardeep.sahibdeep.brotherhood.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;

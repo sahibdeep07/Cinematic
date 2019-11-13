@@ -3,20 +3,18 @@ package cheema.hardeep.sahibdeep.brotherhood.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.Group;
-import android.support.constraint.Guideline;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.Group;
+import androidx.constraintlayout.widget.Guideline;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import javax.inject.Inject;
 
@@ -30,9 +28,6 @@ import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 

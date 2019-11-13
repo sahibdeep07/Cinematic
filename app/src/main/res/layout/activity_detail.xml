@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DetailActivity">
+
+    <ProgressBar
+        android:id="@+id/detailProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imagePoster"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/mock_movie" />
+
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_left" />
+
+    <TextView
+        android:id="@+id/movieName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="@id/imagePoster"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Avengers" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/theatreBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imagePoster">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/favoriteIcon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="12dp"
+                android:src="@drawable/icon_star_unselected"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/releaseDateDash"
+                android:layout_width="16dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/releaseDateHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/releaseDateHeader" />
+
+            <TextView
+                android:id="@+id/releaseDateHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/release_date"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toEndOf="@id/releaseDateDash"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/releaseDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toStartOf="@id/releaseDateHeader"
+                app:layout_constraintTop_toBottomOf="@id/releaseDateHeader"
+                tools:text="June 3rd, 2019" />
+
+            <View
+                android:id="@+id/genreDash"
+                android:layout_width="16dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/genreHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/genreHeader" />
+
+            <TextView
+                android:id="@+id/genreHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/genre"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toEndOf="@id/genreDash"
+                app:layout_constraintTop_toBottomOf="@id/releaseDateText" />
+
+
+            <TextView
+                android:id="@+id/genreText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:typeface="serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/genreHeader"
+                app:layout_constraintTop_toBottomOf="@id/genreHeader"
+                tools:text="Action, Adventure" />
+
+            <View
+                android:id="@+id/durationDash"
+                android:layout_width="16dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/durationHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/durationHeader" />
+
+            <TextView
+                android:id="@+id/durationHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/duration"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toEndOf="@id/durationDash"
+                app:layout_constraintTop_toBottomOf="@id/genreText" />
+
+
+            <TextView
+                android:id="@+id/durationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toStartOf="@id/durationHeader"
+                app:layout_constraintTop_toBottomOf="@id/durationHeader"
+                tools:text="1 hour 38 minutes" />
+
+            <View
+                android:id="@+id/viewingRatingDash"
+                android:layout_width="16dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/viewingRatingHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/viewingRatingHeader" />
+
+            <TextView
+                android:id="@+id/viewingRatingHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/viewing_ratings"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toEndOf="@id/viewingRatingDash"
+                app:layout_constraintTop_toBottomOf="@id/durationText" />
+
+
+            <TextView
+                android:id="@+id/viewingRatingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toStartOf="@id/viewingRatingHeader"
+                app:layout_constraintTop_toBottomOf="@id/viewingRatingHeader"
+                tools:text="18+ Rated R" />
+
+            <View
+                android:id="@+id/summaryDash"
+                android:layout_width="16dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/summaryHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/summaryHeader" />
+
+            <TextView
+                android:id="@+id/summaryHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/summary"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toEndOf="@id/summaryDash"
+                app:layout_constraintTop_toBottomOf="@id/viewingRatingText" />
+
+
+            <TextView
+                android:id="@+id/summaryText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:typeface="serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/summaryHeader"
+                app:layout_constraintTop_toBottomOf="@id/summaryHeader"
+                tools:text="Nick Fury is compelled to launch the Avengers Initiative when Loki poses a threat to planet Earth. His squad of superheroes put their minds together to accomplish the task." />
+
+            <View
+                android:id="@+id/castDash"
+                android:layout_width="16dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="@id/castHeader"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/castHeader" />
+
+            <TextView
+                android:id="@+id/castHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/cast"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toEndOf="@id/castDash"
+                app:layout_constraintTop_toBottomOf="@id/summaryText" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/castRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/castHeader"
+                app:layout_constraintTop_toBottomOf="@id/castHeader" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/movieDetailGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.40" />
+
+    <View
+        android:id="@+id/theatreBackground"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:background="@drawable/curved_top_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/movieDetailGuideLine"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/theaterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/theater"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/getTicketsBackground"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:background="@drawable/curved_top_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/movieDetailGuideLine" />
+
+    <TextView
+        android:id="@+id/getTicketsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/get_tickets"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="20sp"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/movieDetailGuideLine" />
+
+    <ImageView
+        android:id="@+id/nextImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/icon_right" />
+
+    <ImageView
+        android:id="@+id/theatreImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/movieDetailGuideLine"
+        app:srcCompat="@drawable/icon_right" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <com.github.florent37.arclayout.ArcLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="200dp"-->
+    <!--        app:arc_cropDirection="cropInside"-->
+    <!--        app:arc_height="90dp"-->
+    <!--        app:arc_padding="30dp"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--        <com.flaviofaria.kenburnsview.KenBurnsView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:scaleType="centerCrop"-->
+    <!--            android:src="@drawable/road" />-->
+
+    <!--    </com.github.florent37.arclayout.ArcLayout>-->

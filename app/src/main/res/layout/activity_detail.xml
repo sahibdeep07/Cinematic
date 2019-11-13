@@ -15,11 +15,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imagePoster"
+    <com.flaviofaria.kenburnsview.KenBurnsView
+        android:id="@+id/imagePosterView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
+        android:layout_height="250dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +44,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:typeface="serif"
-        app:layout_constraintBottom_toBottomOf="@id/imagePoster"
+        app:layout_constraintBottom_toBottomOf="@id/imagePosterView"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Avengers" />
 
@@ -55,7 +54,7 @@
         app:layout_constraintBottom_toTopOf="@id/theatreBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imagePoster">
+        app:layout_constraintTop_toBottomOf="@id/imagePosterView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -353,22 +352,3 @@
         app:srcCompat="@drawable/icon_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!--    <com.github.florent37.arclayout.ArcLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="200dp"-->
-    <!--        app:arc_cropDirection="cropInside"-->
-    <!--        app:arc_height="90dp"-->
-    <!--        app:arc_padding="30dp"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent">-->
-
-    <!--        <com.flaviofaria.kenburnsview.KenBurnsView-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:scaleType="centerCrop"-->
-    <!--            android:src="@drawable/road" />-->
-
-    <!--    </com.github.florent37.arclayout.ArcLayout>-->

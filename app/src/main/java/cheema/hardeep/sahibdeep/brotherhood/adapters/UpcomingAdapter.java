@@ -20,7 +20,7 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.TOMORROW;
 
 public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.UpcomingViewHolder> {
 
-    List<UpcomingData> dataSet = new ArrayList<>();
+    private List<UpcomingData> dataSet = new ArrayList<>();
 
     public void updateDataSet(List<UpcomingData> adapterData) {
         dataSet.clear();

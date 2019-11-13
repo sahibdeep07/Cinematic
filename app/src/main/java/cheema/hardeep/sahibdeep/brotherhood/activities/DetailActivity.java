@@ -9,12 +9,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
 
 import javax.inject.Inject;
 
@@ -36,17 +41,19 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HOURS;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.MINUTES;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.RATED_R;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIXTY;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_500;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String KEY_MOVIE_ID = "movie-id";
+    private static final String KEY_MOVIE_ID = "movie-id";
+    private static final int ANIMATION_DURATION = 2000;
 
     @BindView(R.id.detailProgressBar)
     ProgressBar detailProgressBar;
 
-    @BindView(R.id.imagePoster)
-    ImageView imagePoster;
+    @BindView(R.id.imagePosterView)
+    KenBurnsView imagePosterView;
 
     @BindView(R.id.backButton)
     ImageView backButton;
@@ -100,7 +107,11 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
 
+        RandomTransitionGenerator generator = new RandomTransitionGenerator(ANIMATION_DURATION, new LinearInterpolator());
+        imagePosterView.setTransitionGenerator(generator);
+
         requestMovieDetails();
+        attachClickListeners();
     }
 
     @Override
@@ -137,8 +148,21 @@ public class DetailActivity extends AppCompatActivity {
         );
     }
 
+    private void attachClickListeners() {
+        backButton.setOnClickListener(v -> finish());
+
+        getTicketsButton.setOnClickListener(v -> { /*TOOD*/ });
+        theatreButton.setOnClickListener(v -> { /*TODO*/ });
+
+        favoriteIcon.setOnClickListener(v -> {
+            favoriteIcon.setImageDrawable(v.getContext().getResources()
+                    .getDrawable(favoriteIcon.isSelected() ? R.drawable.icon_star_unselected : R.drawable.icon_star_selected));
+            favoriteIcon.setSelected(!favoriteIcon.isSelected());
+        });
+    }
+
     private void handleMovieDetailResponse(MovieDetail movieDetail) {
-        Glide.with(this).load(Utilities.createImageUrl(movieDetail.getPosterPath(), SIZE_500)).into(imagePoster);
+        Glide.with(this).load(Utilities.createImageUrl(movieDetail.getPosterPath(), SIZE_342)).into(imagePosterView);
         movieName.setText(movieDetail.getTitle());
         releaseDateText.setText(Utilities.convertDate(movieDetail.getReleaseDate()));
         durationText.setText(convertToHoursAndMinutes(movieDetail.getRuntime().intValue()));

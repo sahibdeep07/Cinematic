@@ -39,7 +39,7 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.Upcomi
     public void onBindViewHolder(@NonNull UpcomingViewHolder upcomingViewHolder, int i) {
         UpcomingData upcomingData = dataSet.get(i);
         upcomingViewHolder.date.setText(handleDate(upcomingData));
-        upcomingViewHolder.upcomingMovieAdapter.updateDataSet(upcomingData.getMovies());
+        upcomingViewHolder.movieAdapter.updateDataSet(upcomingData.getMovies());
     }
 
     private String handleDate(UpcomingData upcomingData) {
@@ -55,15 +55,15 @@ public class UpcomingAdapter extends RecyclerView.Adapter<UpcomingAdapter.Upcomi
 
         RecyclerView horizontalRecyclerView;
         TextView date;
-        UpcomingMovieAdapter upcomingMovieAdapter;
+        MovieAdapter movieAdapter;
 
         public UpcomingViewHolder(View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.upcomingDate);
             horizontalRecyclerView = itemView.findViewById(R.id.upcomingHorizontalRecyclerView);
             horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
-            upcomingMovieAdapter = new UpcomingMovieAdapter();
-            horizontalRecyclerView.setAdapter(upcomingMovieAdapter);
+            movieAdapter = new MovieAdapter();
+            horizontalRecyclerView.setAdapter(movieAdapter);
         }
     }
 }

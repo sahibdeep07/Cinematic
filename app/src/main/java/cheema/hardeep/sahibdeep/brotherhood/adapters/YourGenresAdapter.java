@@ -1,5 +1,6 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,34 +19,35 @@ import java.util.List;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
+import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
+import cheema.hardeep.sahibdeep.brotherhood.models.UpcomingData;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_UPCOMING;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
 
-public class UpcomingMovieAdapter extends RecyclerView.Adapter<UpcomingMovieAdapter.UpcomingMovieViewHolder> {
+public class YourGenresAdapter extends RecyclerView.Adapter<YourGenresAdapter.YourGenreViewHolder> {
 
     private List<Movie> movies = new ArrayList<>();
 
-    public void updateDataSet(List<Movie> upcomingMovies) {
+    public void updateDataSet(List<Movie> adapterData) {
         movies.clear();
-        movies.addAll(upcomingMovies);
+        movies.addAll(adapterData);
         notifyDataSetChanged();
     }
-
     @NonNull
     @Override
-    public UpcomingMovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.upcoming_item_movie, viewGroup, false);
-        return new UpcomingMovieViewHolder(view);
+    public YourGenreViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.upcoming_item, viewGroup, false);
+        return new YourGenreViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UpcomingMovieViewHolder upcomingMovieViewHolder, int i) {
+    public void onBindViewHolder(@NonNull YourGenreViewHolder yourGenreViewHolder, int i) {
         Movie movie = movies.get(i);
-        upcomingMovieViewHolder.movieName.setText(movie.getTitle());
-        upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
-        loadImageWithGlide(movie.getBackdropPath(), upcomingMovieViewHolder.movieImage);
+        yourGenreViewHolder.movieName.setText(movie.getTitle());
+        yourGenreViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
+        loadImageWithGlide(movie.getBackdropPath(), yourGenreViewHolder.movieImage);
     }
 
     private void loadImageWithGlide(String url, ImageView imageView) {
@@ -63,13 +65,12 @@ public class UpcomingMovieAdapter extends RecyclerView.Adapter<UpcomingMovieAdap
         return movies.size();
     }
 
-    class UpcomingMovieViewHolder extends RecyclerView.ViewHolder {
-
+    class YourGenreViewHolder extends RecyclerView.ViewHolder {
         ImageView movieImage;
         TextView movieRating;
         TextView movieName;
 
-        UpcomingMovieViewHolder(View itemView) {
+        public YourGenreViewHolder(@NonNull View itemView) {
             super(itemView);
             movieImage = itemView.findViewById(R.id.upcomingMovieImage);
             movieRating = itemView.findViewById(R.id.upcomingMovieRating);

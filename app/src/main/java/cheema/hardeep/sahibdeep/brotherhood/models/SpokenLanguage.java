@@ -1,24 +1,22 @@
 
 package cheema.hardeep.sahibdeep.brotherhood.models;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-@Generated("net.hexar.json2pojo")
-@SuppressWarnings("unused")
-public class Genre {
+public class SpokenLanguage {
 
-    @Expose
-    private Long id;
+    @SerializedName("iso_639_1")
+    private String iso6391;
     @Expose
     private String name;
 
-    public Long getId() {
-        return id;
+    public String getIso6391() {
+        return iso6391;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIso6391(String iso6391) {
+        this.iso6391 = iso6391;
     }
 
     public String getName() {

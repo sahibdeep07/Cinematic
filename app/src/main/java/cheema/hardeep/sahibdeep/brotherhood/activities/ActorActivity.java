@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,9 @@ import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,11 +51,13 @@ public class ActorActivity extends AppCompatActivity {
     TextView moveToHomeOrSave;
     Group genreGroup;
 
+    @Inject
+    CompositeDisposable compositeDisposable;
 
     @Inject
     MovieApi movieApi;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, ActorActivity.class);
     }
 
@@ -64,10 +70,15 @@ public class ActorActivity extends AppCompatActivity {
 
         findViews();
         setupBottomButtonsAndGuideline();
-        setIsProgressBarVisible(true);
         setListeners();
         setupRecyclerView();
         requestActors();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        compositeDisposable.clear();
     }
 
     private void findViews() {
@@ -104,24 +115,22 @@ public class ActorActivity extends AppCompatActivity {
     }
 
     private void requestActors() {
-        movieApi.getActors(EN_US).enqueue(new Callback<ActorResponse>() {
-            @Override
-            public void onResponse(Call<ActorResponse> call, Response<ActorResponse> response) {
-                handleActorResponse(response);
-            }
-
-            @Override
-            public void onFailure(Call<ActorResponse> call, Throwable t) {
-                Log.e("actorRequest", "onFailure: Error in getting the genres");
-                Toast.makeText(ActorActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-            }
-        });
+        compositeDisposable.add(
+                movieApi.getActors(EN_US)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doOnTerminate(() -> setIsProgressBarVisible(false))
+                        .subscribe(
+                                actorResponse -> handleActorResponse(actorResponse),
+                                throwable -> Log.e(ActorResponse.class.getSimpleName(), "onFailure: Error in getting the actors" + throwable)
+                        )
+        );
     }
 
-    private void handleActorResponse(Response<ActorResponse> actorResponse) {
-        setIsProgressBarVisible(false);
+    private void handleActorResponse(ActorResponse actorResponse) {
         List<Actor> userActors = SharedPreferenceProvider.getUserActors(this);
-        for (Actor actor : actorResponse.body().getActors()) {
+        for (Actor actor : actorResponse.getActors()) {
             //Pre Select Genre if already in SharedPreferences
             if (!userActors.isEmpty()) {
                 for (Actor userActor : userActors) {
@@ -131,7 +140,7 @@ public class ActorActivity extends AppCompatActivity {
                 }
             }
         }
-        actorAdapter.update(actorResponse.body().getActors());
+        actorAdapter.update(actorResponse.getActors());
     }
 
     private void handleHomeClick() {

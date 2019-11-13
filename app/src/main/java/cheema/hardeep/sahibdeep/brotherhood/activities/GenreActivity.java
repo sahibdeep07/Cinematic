@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,9 @@ import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 
@@ -48,6 +47,9 @@ public class GenreActivity extends AppCompatActivity {
     Group nameGroup;
 
     @Inject
+    CompositeDisposable compositeDisposable;
+
+    @Inject
     MovieApi movieApi;
 
     public static Intent createIntent(Context context) {
@@ -63,10 +65,15 @@ public class GenreActivity extends AppCompatActivity {
 
         findAndInitializeViews();
         setupBottomButtonsAndGuideline();
-        setIsProgressBarVisible(true);
         setClickListeners();
         setupRecyclerView();
         requestGenres();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        compositeDisposable.clear();
     }
 
     private void findAndInitializeViews() {
@@ -81,7 +88,7 @@ public class GenreActivity extends AppCompatActivity {
 
     private void setupBottomButtonsAndGuideline() {
         boolean isFirstLaunch = SharedPreferenceProvider.isFirstLaunch(this);
-        nameGroup.setVisibility(isFirstLaunch ? View.VISIBLE: View.GONE);
+        nameGroup.setVisibility(isFirstLaunch ? View.VISIBLE : View.GONE);
         genreGuideline.setGuidelinePercent(isFirstLaunch ? PERCENT_30 : PERCENT_0);
         moveToActorOrSav.setText(isFirstLaunch ? ACTORS : SAVE);
     }
@@ -103,20 +110,16 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void requestGenres() {
-        movieApi.getGenre(EN_US).enqueue(new Callback<GenreResponse>() {
-            @Override
-            public void onResponse(Call<GenreResponse> call, Response<GenreResponse> response) {
-                setIsProgressBarVisible(false);
-                GenreResponse genreResponse = response.body();
-                handleGenreResponse(genreResponse);
-            }
-
-            @Override
-            public void onFailure(Call<GenreResponse> call, Throwable t) {
-                Log.e("genreRequest", "onFailure: Error in getting the genres");
-                Toast.makeText(GenreActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-            }
-        });
+        compositeDisposable.add(movieApi.getGenre(EN_US)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                .doOnTerminate(() -> setIsProgressBarVisible(false))
+                .subscribe(
+                        genreResponse -> handleGenreResponse(genreResponse),
+                        throwable -> Log.e(GenreActivity.class.getSimpleName(), "onFailure: Error in getting the genres" + throwable)
+                )
+        );
     }
 
     private void handleGenreResponse(GenreResponse genreResponse) {
@@ -161,7 +164,7 @@ public class GenreActivity extends AppCompatActivity {
     }
 
     private void handleTransition() {
-        if(SharedPreferenceProvider.isFirstLaunch(this)) {
+        if (SharedPreferenceProvider.isFirstLaunch(this)) {
             startActivity(ActorActivity.createIntent(this));
         } else {
             finish();

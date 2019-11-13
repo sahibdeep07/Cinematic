@@ -3,10 +3,12 @@ package cheema.hardeep.sahibdeep.brotherhood.dagger;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
@@ -17,8 +19,13 @@ public class BrotherhoodModule {
     private static final String API_KEY = "5812e4b63553d1273a420416fddeed72";
 
     @Provides
+    CompositeDisposable provideCompositeDisposable() {
+        return new CompositeDisposable();
+    }
+
+    @Provides
     OkHttpClient provideOkHttpClient() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        return new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     //Intercept the outgoing request
                     Request original = chain.request();
@@ -35,7 +42,6 @@ public class BrotherhoodModule {
                     return chain.proceed(newRequestWithApiKey);
                 })
                 .build();
-        return okHttpClient;
     }
 
     @Provides
@@ -43,6 +49,7 @@ public class BrotherhoodModule {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }

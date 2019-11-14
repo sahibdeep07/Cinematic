@@ -1,7 +1,6 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,32 +8,38 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import java.security.Permissions;
+import javax.inject.Inject;
 
+import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
-import cheema.hardeep.sahibdeep.brotherhood.utils.LocationUtil;
+import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
+
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.FEATURE_UNAVALIABLE;
 
 public class SplashActivity extends AppCompatActivity {
 
     private static final int TRANSITION_TIME = 2000;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
+    @Inject
+    LocationService locationService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
+        ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
 
-        new Handler().postDelayed(() -> showPermissionDialog(), TRANSITION_TIME);
+        new Handler().postDelayed(this::showPermissionDialog, TRANSITION_TIME);
     }
 
     private void showPermissionDialog() {
-        if (!LocationUtil.checkPermission(this)) {
+        if (!locationService.checkPermission()) {
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
@@ -47,8 +52,10 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Some features of the application might not work properly without location permissions", Toast.LENGTH_LONG).show();
+        if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, FEATURE_UNAVALIABLE, Toast.LENGTH_LONG).show();
+        } else {
+            locationService.requestSingleLocation(null);
         }
         transition();
     }

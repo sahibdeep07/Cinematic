@@ -6,12 +6,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,23 +30,26 @@ import cheema.hardeep.sahibdeep.brotherhood.adapters.CastAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.models.CastDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
+import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ERROR_MOVIE_DETAIL;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ERROR_MOVIE_DETAIL_CAST;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.GENERAL_AUDIENCE;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.GOOGLE_MAP_MOVIE_THEATRE_URL;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HOURS;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.MINUTES;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.RATED_R;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIXTY;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_500;
 
 public class DetailActivity extends AppCompatActivity {
 
     private static final String KEY_MOVIE_ID = "movie-id";
-    private static final int ANIMATION_DURATION = 2000;
+    private static final int ANIMATION_DURATION = 3000;
 
     @BindView(R.id.detailProgressBar)
     ProgressBar detailProgressBar;
@@ -94,6 +96,9 @@ public class DetailActivity extends AppCompatActivity {
     @Inject
     CompositeDisposable compositeDisposable;
 
+    @Inject
+    LocationService locationService;
+
     private MovieDetail movieDetail;
 
     public static Intent createIntent(Context context, Long movieId) {
@@ -115,6 +120,21 @@ public class DetailActivity extends AppCompatActivity {
 
         requestMovieDetails();
         attachClickListeners();
+        requestLocation();
+    }
+
+    private void requestLocation() {
+        locationService.requestSingleLocation(new LocationService.LocationProvider() {
+            @Override
+            public void onLocation(Location location) {
+                enableLocationFeature(true);
+            }
+
+            @Override
+            public void onLocationFailure() {
+                enableLocationFeature(false);
+            }
+        });
     }
 
     @Override
@@ -134,7 +154,7 @@ public class DetailActivity extends AppCompatActivity {
                 .doOnTerminate(() -> detailProgressBar.setVisibility(View.GONE))
                 .subscribe(
                         this::handleMovieDetailResponse,
-                        throwable -> Log.e(MovieDetail.class.getSimpleName(), "Error Movie Details: " + throwable)
+                        throwable -> Log.e(MovieDetail.class.getSimpleName(), ERROR_MOVIE_DETAIL + throwable)
                 )
         );
 
@@ -146,9 +166,14 @@ public class DetailActivity extends AppCompatActivity {
                         .doOnTerminate(() -> detailProgressBar.setVisibility(View.GONE))
                         .subscribe(
                                 this::handleMovieCastResponse,
-                                throwable -> Log.e(MovieDetail.class.getSimpleName(), "Error Movie Details (Cast): " + throwable)
+                                throwable -> Log.e(MovieDetail.class.getSimpleName(), ERROR_MOVIE_DETAIL_CAST + throwable)
                         )
         );
+    }
+
+    private void enableLocationFeature(boolean enable) {
+        getTicketsButton.setVisibility(enable ? View.VISIBLE : View.GONE);
+        theatreButton.setVisibility(enable ? View.VISIBLE : View.GONE);
     }
 
     private void attachClickListeners() {
@@ -156,6 +181,14 @@ public class DetailActivity extends AppCompatActivity {
 
         getTicketsButton.setOnClickListener(v -> startActivity(BookTicketActivity.createIntent(this, movieDetail.getTitle())));
         theatreButton.setOnClickListener(v -> {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                    Uri.parse(String.format(
+                            GOOGLE_MAP_MOVIE_THEATRE_URL,
+                            locationService.getCurrentLocation().getLatitude(),
+                            locationService.getCurrentLocation().getLongitude())
+                    )
+            );
+            startActivity(intent);
         });
 
         favoriteIcon.setOnClickListener(v -> {

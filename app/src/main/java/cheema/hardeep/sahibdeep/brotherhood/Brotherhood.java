@@ -5,7 +5,6 @@ import android.app.Application;
 import cheema.hardeep.sahibdeep.brotherhood.dagger.BrotherhoodComponent;
 import cheema.hardeep.sahibdeep.brotherhood.dagger.BrotherhoodModule;
 import cheema.hardeep.sahibdeep.brotherhood.dagger.DaggerBrotherhoodComponent;
-import cheema.hardeep.sahibdeep.brotherhood.utils.LocationUtil;
 
 public class Brotherhood extends Application {
 
@@ -17,7 +16,7 @@ public class Brotherhood extends Application {
 
         brotherhoodComponent = DaggerBrotherhoodComponent
                 .builder()
-                .brotherhoodModule(new BrotherhoodModule())
+                .brotherhoodModule(new BrotherhoodModule(this))
                 .build();
     }
 

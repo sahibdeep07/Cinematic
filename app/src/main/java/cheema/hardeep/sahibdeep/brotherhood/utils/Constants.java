@@ -4,6 +4,11 @@ package cheema.hardeep.sahibdeep.brotherhood.utils;
 public class Constants {
 
     public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+    public static final String GOOGLE_SEARCH_URL = "https://www.google.com/search?num=1&q=";
+    public static final String BASE_BOOK_MY_SHOW_URL = "https://in.bookmyshow.com/";
+    public static final String BOOK_MY_SHOW_QUERY = "bookmyshow %s %s";
+    public static final String GOOGLE_MAP_MOVIE_THEATRE_URL = "http://maps.google.com/?ll=%s,%s&q=movie+theaters";
+
 
     public static final String APP_NAME = "Brotherhood";
     public static final String EMPTY = "";
@@ -32,4 +37,21 @@ public class Constants {
     public static final int ROUNDED_CORNER_ACTORS = 100;
     public static final int ROUNDED_CORNER_UPCOMING = 20;
     public static final int SIXTY = 60;
+
+    public static final String HREF_BASE = "/url?q=";
+    public static final String AMPERSAND = "&";
+    public static final String CHARSET = "UTF-8";
+    public static final String USER_AGENT = "Chrome";
+    public static final String A_HREF = "a[href]";
+    public static final String HREF = "href";
+    public static final String ERROR_WEBPAGE = "Error loading the WebPage";
+    public static final String ERROR_JSOUP = "Error creating Jsoup connection: ";
+    public static final String ERROR_URL = "Error creating book my show url: ";
+
+    public static final String ERROR_MOVIE_DETAIL = "Error Movie Details: ";
+    public static final String ERROR_MOVIE_DETAIL_CAST = "Error Movie Details (Cast): ";
+
+    public static final String LOCATION_PERMISSION_REQUIRED = "Location Permission Required";
+    public static final String FEATURE_UNAVALIABLE = "Some features of the application might not work properly without location permissions";
+    public static final String NO_LOCATION = "No Location Available Request Location";
 }

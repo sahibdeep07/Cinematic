@@ -94,6 +94,8 @@ public class DetailActivity extends AppCompatActivity {
     @Inject
     CompositeDisposable compositeDisposable;
 
+    private MovieDetail movieDetail;
+
     public static Intent createIntent(Context context, Long movieId) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra(KEY_MOVIE_ID, movieId);
@@ -104,6 +106,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        getSupportActionBar().hide();
         ButterKnife.bind(this);
         ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
 
@@ -130,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
                 .doOnSubscribe(disposable -> detailProgressBar.setVisibility(View.VISIBLE))
                 .doOnTerminate(() -> detailProgressBar.setVisibility(View.GONE))
                 .subscribe(
-                        movieDetail -> handleMovieDetailResponse(movieDetail),
+                        this::handleMovieDetailResponse,
                         throwable -> Log.e(MovieDetail.class.getSimpleName(), "Error Movie Details: " + throwable)
                 )
         );
@@ -142,7 +145,7 @@ public class DetailActivity extends AppCompatActivity {
                         .doOnSubscribe(disposable -> detailProgressBar.setVisibility(View.VISIBLE))
                         .doOnTerminate(() -> detailProgressBar.setVisibility(View.GONE))
                         .subscribe(
-                                castDetail -> handleMovieCastResponse(castDetail),
+                                this::handleMovieCastResponse,
                                 throwable -> Log.e(MovieDetail.class.getSimpleName(), "Error Movie Details (Cast): " + throwable)
                         )
         );
@@ -151,8 +154,9 @@ public class DetailActivity extends AppCompatActivity {
     private void attachClickListeners() {
         backButton.setOnClickListener(v -> finish());
 
-        getTicketsButton.setOnClickListener(v -> { /*TOOD*/ });
-        theatreButton.setOnClickListener(v -> { /*TODO*/ });
+        getTicketsButton.setOnClickListener(v -> startActivity(BookTicketActivity.createIntent(this, movieDetail.getTitle())));
+        theatreButton.setOnClickListener(v -> {
+        });
 
         favoriteIcon.setOnClickListener(v -> {
             favoriteIcon.setImageDrawable(v.getContext().getResources()
@@ -162,6 +166,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void handleMovieDetailResponse(MovieDetail movieDetail) {
+        this.movieDetail = movieDetail;
         Glide.with(this).load(Utilities.createImageUrl(movieDetail.getPosterPath(), SIZE_342)).into(imagePosterView);
         movieName.setText(movieDetail.getTitle());
         releaseDateText.setText(Utilities.convertDate(movieDetail.getReleaseDate()));

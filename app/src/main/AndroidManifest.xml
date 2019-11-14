@@ -5,6 +5,8 @@
     package="cheema.hardeep.sahibdeep.brotherhood">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 
     <dist:module dist:instant="true" />
 
@@ -17,12 +19,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.DetailActivity"></activity>
+        <activity android:name=".activities.BookTicketActivity"></activity>
+        <activity android:name=".activities.DetailActivity" />
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/title_activity_home"></activity>
-        <activity android:name=".activities.ActorActivity"></activity>
-        <activity android:name=".activities.GenreActivity"></activity>
+            android:label="@string/title_activity_home" />
+        <activity android:name=".activities.ActorActivity" />
+        <activity android:name=".activities.GenreActivity" />
         <activity android:name=".activities.NameActivity" />
         <activity android:name=".activities.SplashActivity">
             <intent-filter>

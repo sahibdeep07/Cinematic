@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -49,6 +51,9 @@ public class BookTicketActivity extends AppCompatActivity {
     @BindView(R.id.bookingWebView)
     WebView bookingWebView;
 
+    @BindView(R.id.webViewProgressBar)
+    ProgressBar webViewProgressBar;
+
     @Inject
     CompositeDisposable compositeDisposable;
 
@@ -76,9 +81,11 @@ public class BookTicketActivity extends AppCompatActivity {
     private void loadBookMyShowUrl() {
         compositeDisposable.add(
                 Observable
-                        .just(Objects.requireNonNull(createJsoupConnection()))
+                        .defer(() -> Observable.just(Jsoup.connect(createBookMyShowUrl()).userAgent(USER_AGENT).get()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> webViewProgressBar.setVisibility(View.VISIBLE))
+                        .doOnTerminate(() -> webViewProgressBar.setVisibility(View.GONE))
                         .subscribe(document -> {
                             String bookMyShowUrl = getBookMyShowUrl(document);
                             if (bookMyShowUrl != null && !BASE_BOOK_MY_SHOW_URL.equals(bookMyShowUrl) && bookMyShowUrl.contains(AMPERSAND)) {
@@ -91,15 +98,6 @@ public class BookTicketActivity extends AppCompatActivity {
                             finish();
                         })
         );
-    }
-
-    private Document createJsoupConnection() {
-        try {
-            return Jsoup.connect(createBookMyShowUrl()).userAgent(USER_AGENT).get();
-        } catch (IOException e) {
-            Log.e(BookTicketActivity.class.getSimpleName(), ERROR_JSOUP + e.getMessage());
-            return null;
-        }
     }
 
     private String createBookMyShowUrl() {

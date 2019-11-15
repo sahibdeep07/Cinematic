@@ -9,6 +9,7 @@ import java.util.List;
 
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
+import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.UserInfo;
 
 
@@ -103,6 +104,40 @@ public class SharedPreferenceProvider {
      */
     public static List<Actor> getUserActors(Context context) {
         return getUserInfo(context).getActors();
+    }
+
+    /**
+     * Add user favorite to shared preferences
+     * This method get the UserInfo object from shared preference if it exist then update the favorite
+     * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
+     * provided favorite and save it
+     */
+    public static void addUserFavorite(Context context, MovieDetail movieDetail) {
+        UserInfo userInfo = getUserInfo(context);
+        userInfo.getFavoritesList().add(movieDetail);
+        saveUserInfo(context, userInfo);
+    }
+
+    /**
+     * Remove user favorite to shared preferences
+     * This method get the UserInfo object from shared preference if it exist then remove the favorite
+     */
+    public static void removeUserFavorite(Context context, MovieDetail targetMovieDetail) {
+        UserInfo userInfo = getUserInfo(context);
+        for (MovieDetail movieDetail : userInfo.getFavoritesList()) {
+            if (movieDetail.getId().equals(targetMovieDetail.getId()))
+                userInfo.getFavoritesList().remove(movieDetail);
+        }
+        saveUserInfo(context, userInfo);
+    }
+
+    /**
+     * Get user favorites from shared preferences
+     * This method get the UserInfo object from shared preference if it exist then return the favorites
+     * from object
+     */
+    public static List<MovieDetail> getUserFavorites(Context context) {
+        return getUserInfo(context).getFavoritesList();
     }
 
     /**

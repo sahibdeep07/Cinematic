@@ -1,10 +1,5 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.Group;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -17,10 +12,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
-
 
 import javax.inject.Inject;
 
@@ -29,10 +28,11 @@ import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.CastAdapter;
+import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
+import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.models.CastDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
-import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -201,14 +201,29 @@ public class DetailActivity extends AppCompatActivity {
         });
 
         favoriteIcon.setOnClickListener(v -> {
-            favoriteIcon.setImageDrawable(v.getContext().getResources()
-                    .getDrawable(favoriteIcon.isSelected() ? R.drawable.icon_star_unselected : R.drawable.icon_star_selected));
-            favoriteIcon.setSelected(!favoriteIcon.isSelected());
+            if (favoriteIcon.isSelected()) {
+                SharedPreferenceProvider.removeUserFavorite(this, movieDetail);
+                updateFavoriteIcon(false);
+            } else {
+                SharedPreferenceProvider.addUserFavorite(this, movieDetail);
+                updateFavoriteIcon(true);
+            }
         });
+    }
+
+    public void updateFavoriteIcon(boolean isSelected) {
+        favoriteIcon.setSelected(isSelected);
+        favoriteIcon.setImageDrawable(
+                favoriteIcon
+                        .getContext()
+                        .getResources()
+                        .getDrawable(isSelected ? R.drawable.icon_star_selected : R.drawable.icon_star_unselected)
+        );
     }
 
     private void handleMovieDetailResponse(MovieDetail movieDetail) {
         this.movieDetail = movieDetail;
+        setUpView();
         Glide.with(this).load(Utilities.createImageUrl(movieDetail.getPosterPath(), SIZE_342)).into(imagePosterView);
         movieName.setText(movieDetail.getTitle());
         releaseDateText.setText(Utilities.convertDate(movieDetail.getReleaseDate()));
@@ -216,6 +231,16 @@ public class DetailActivity extends AppCompatActivity {
         genreText.setText(Utilities.createGenreString(movieDetail.getGenres()));
         viewingRatingText.setText(movieDetail.getAdult() ? RATED_R : GENERAL_AUDIENCE);
         summaryText.setText(movieDetail.getOverview());
+    }
+
+    private void setUpView() {
+        for (MovieDetail userFavorite : SharedPreferenceProvider.getUserFavorites(this)) {
+            if (userFavorite.getId().equals(movieDetail.getId())) {
+                updateFavoriteIcon(true);
+                return;
+            }
+        }
+        updateFavoriteIcon(false);
     }
 
     private void handleMovieCastResponse(CastDetail castDetail) {

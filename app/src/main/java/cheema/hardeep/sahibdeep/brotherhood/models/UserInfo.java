@@ -8,6 +8,7 @@ public class UserInfo {
     private String name = "";
     private List<Genre> genres = new ArrayList<>();
     private List<Actor> actors = new ArrayList<>();
+    private List<MovieDetail> favoritesList = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -31,5 +32,9 @@ public class UserInfo {
 
     public void setActors(List<Actor> actors) {
         this.actors = actors;
+    }
+
+    public List<MovieDetail> getFavoritesList() {
+        return favoritesList;
     }
 }

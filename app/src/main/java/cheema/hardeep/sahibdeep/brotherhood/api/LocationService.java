@@ -68,11 +68,11 @@ public class LocationService {
     }
 
     public String getCityName() {
-        if (currentLocation == null) {
+        if (currentLocation != null) {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             try {
                 List<Address> addresses = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
-                return addresses.size() > 0 ? addresses.get(0).getAddressLine(0) : EMPTY;
+                return addresses.size() > 0 ? addresses.get(0).getLocality() : EMPTY;
             } catch (IOException e) {
                 e.printStackTrace();
             }

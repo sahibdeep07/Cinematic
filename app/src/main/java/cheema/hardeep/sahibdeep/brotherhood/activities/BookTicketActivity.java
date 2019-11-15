@@ -2,6 +2,7 @@ package cheema.hardeep.sahibdeep.brotherhood.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -66,6 +67,7 @@ public class BookTicketActivity extends AppCompatActivity {
         return intent;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,11 +105,13 @@ public class BookTicketActivity extends AppCompatActivity {
     private String createBookMyShowUrl() {
         String movieName = getIntent().getStringExtra(KEY_MOVIE_NAME);
         try {
-            return GOOGLE_SEARCH_URL + URLEncoder.encode(String.format(BOOK_MY_SHOW_QUERY, movieName, locationService.getCityName()), CHARSET);
+            if(!locationService.getCityName().isEmpty()) {
+                return GOOGLE_SEARCH_URL + URLEncoder.encode(String.format(BOOK_MY_SHOW_QUERY, movieName, locationService.getCityName()), CHARSET);
+            }
         } catch (Exception e) {
             Log.e(BookTicketActivity.class.getSimpleName(), ERROR_URL + e.getMessage());
-            return BASE_BOOK_MY_SHOW_URL;
         }
+        return BASE_BOOK_MY_SHOW_URL;
     }
 
     private String getBookMyShowUrl(Document document) {

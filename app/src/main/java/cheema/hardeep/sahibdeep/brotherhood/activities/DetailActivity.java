@@ -1,6 +1,7 @@
 package cheema.hardeep.sahibdeep.brotherhood.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.RandomTransitionGenerator;
+
 
 import javax.inject.Inject;
 
@@ -85,10 +87,16 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView castRecyclerView;
 
     @BindView(R.id.getTicketsBackground)
-    View getTicketsButton;
+    View getTicketsBackground;
+
+    @BindView(R.id.getTicketGroup)
+    Group getTicketGroup;
 
     @BindView(R.id.theatreBackground)
-    View theatreButton;
+    View theatreBackground;
+
+    @BindView(R.id.theatreGroup)
+    Group theatreGroup;
 
     @Inject
     MovieApi movieApi;
@@ -172,15 +180,16 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void enableLocationFeature(boolean enable) {
-        getTicketsButton.setVisibility(enable ? View.VISIBLE : View.GONE);
-        theatreButton.setVisibility(enable ? View.VISIBLE : View.GONE);
+        getTicketGroup.setVisibility(enable ? View.VISIBLE : View.GONE);
+        theatreGroup.setVisibility(enable ? View.VISIBLE : View.GONE);
     }
 
     private void attachClickListeners() {
         backButton.setOnClickListener(v -> finish());
 
-        getTicketsButton.setOnClickListener(v -> startActivity(BookTicketActivity.createIntent(this, movieDetail.getTitle())));
-        theatreButton.setOnClickListener(v -> {
+        getTicketsBackground.setOnClickListener(v -> startActivity(BookTicketActivity.createIntent(this, movieDetail.getTitle())));
+
+        theatreBackground.setOnClickListener(v -> {
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                     Uri.parse(String.format(
                             GOOGLE_MAP_MOVIE_THEATRE_URL,

@@ -51,7 +51,7 @@ public class Constants {
     public static final String ERROR_MOVIE_DETAIL = "Error Movie Details: ";
     public static final String ERROR_MOVIE_DETAIL_CAST = "Error Movie Details (Cast): ";
 
-    public static final String LOCATION_PERMISSION_REQUIRED = "Location Permission Required";
+    public static final String LOCATION_OFF_AND_PERMISSION_REQUIRED = "Location is turned off or Location Permission are not granted";
     public static final String FEATURE_UNAVALIABLE = "Some features of the application might not work properly without location permissions";
     public static final String NO_LOCATION = "No Location Available Request Location";
 }

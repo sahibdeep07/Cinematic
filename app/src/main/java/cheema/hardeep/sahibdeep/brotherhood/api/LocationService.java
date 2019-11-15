@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EMPTY;
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.LOCATION_PERMISSION_REQUIRED;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.LOCATION_OFF_AND_PERMISSION_REQUIRED;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.NO_LOCATION;
 
 public class LocationService {
@@ -48,26 +48,27 @@ public class LocationService {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        if(checkPermission()) {
+        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (checkPermission() && isGPSEnabled) {
             locationManager.requestSingleUpdate(criteria, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     currentLocation = location;
-                    if(locationProvider != null) locationProvider.onLocation(location);
+                    if (locationProvider != null) locationProvider.onLocation(location);
                 }
 
-                @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
-                @Override public void onProviderEnabled(String provider) {}
-                @Override public void onProviderDisabled(String provider) {}
+                @Override public void onStatusChanged(String provider, int status, Bundle extras) { }
+                @Override public void onProviderEnabled(String provider) { }
+                @Override public void onProviderDisabled(String provider) { }
             }, null);
         } else {
-            Toast.makeText(context, LOCATION_PERMISSION_REQUIRED, Toast.LENGTH_SHORT).show();
-            if(locationProvider != null) locationProvider.onLocationFailure();
+            Toast.makeText(context, LOCATION_OFF_AND_PERMISSION_REQUIRED, Toast.LENGTH_SHORT).show();
+            if (locationProvider != null) locationProvider.onLocationFailure();
         }
     }
 
     public String getCityName() {
-        if(currentLocation == null) {
+        if (currentLocation == null) {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             try {
                 List<Address> addresses = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);

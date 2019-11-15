@@ -332,7 +332,7 @@
         app:layout_constraintStart_toStartOf="@id/movieDetailGuideLine" />
 
     <ImageView
-        android:id="@+id/nextImage"
+        android:id="@+id/getTicketsImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -350,5 +350,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/movieDetailGuideLine"
         app:srcCompat="@drawable/icon_right" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/getTicketGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="getTicketsBackground,getTicketsText,getTicketsImage"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/theatreGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="theatreBackground,theaterText,theatreImage"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

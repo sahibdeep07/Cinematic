@@ -62,13 +62,13 @@ public class RecommendedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommended, container, false);
-        view.findViewById(R.id.homeName);
         name = view.findViewById(R.id.homeName);
         recommendedProgressBar = view.findViewById(R.id.progressBar);
         genresRecyclerView = view.findViewById(R.id.yourGenreRV);
         actorsRecyclerView = view.findViewById(R.id.yourActorsRV);
         favouritesRecyclerView = view.findViewById(R.id.yourFavouriteRV);
         name.setText(HI + SharedPreferenceProvider.getUserName(getContext()));
+
 
         setRecyclerView(genresRecyclerView, genreAdapter);
         setRecyclerView(actorsRecyclerView, actorAdapter);

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Movie {
+public class Movie implements Comparable<Movie> {
 
     @Expose
     private Boolean adult;
@@ -103,5 +103,13 @@ public class Movie {
 
     public Long getVoteCount() {
         return voteCount;
+    }
+
+    @Override
+    public int compareTo(Movie movie) {
+        if (getReleaseDate() == null || movie.getReleaseDate() == null) {
+            return 0;
+        }
+        return getReleaseDate().compareTo(movie.getReleaseDate());
     }
 }

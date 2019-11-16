@@ -9,10 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,9 +21,9 @@ import javax.inject.Inject;
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.MovieAdapter;
-import cheema.hardeep.sahibdeep.brotherhood.adapters.YourGenresAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,6 +31,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HI;
 
 public class RecommendedFragment extends Fragment {
     TextView name;
@@ -64,7 +66,7 @@ public class RecommendedFragment extends Fragment {
         genresRecyclerView = view.findViewById(R.id.yourGenreRV);
         actorsRecyclerView = view.findViewById(R.id.yourActorsRV);
         favouritesRecyclerView = view.findViewById(R.id.yourFavouriteRV);
-        name.setText("Hi, " + SharedPreferenceProvider.getUserName(getContext()));
+        name.setText(HI + SharedPreferenceProvider.getUserName(getContext()));
 
         setRecyclerView(genresRecyclerView, genreAdapter);
         setRecyclerView(actorsRecyclerView, actorAdapter);
@@ -95,11 +97,26 @@ public class RecommendedFragment extends Fragment {
 
     private void handleGenreResponse(TopRated topRated) {
         List<Movie> topRatedList = topRated.getResults();
-        genreAdapter.updateDataSet(topRatedList);
+        actorAdapter.updateDataSet(topRatedList);
+        genreAdapter.updateDataSet(getActorsList(topRatedList, SharedPreferenceProvider.getUserGenres(getContext())));;
     }
 
     public void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
+    }
+
+    private List<Movie> getActorsList (List<Movie> movieList, List<Genre> genreList){
+        HashSet<Movie> genreMovieHash = new HashSet<>();
+        for(Movie movie: movieList) {
+            for(long genreID: movie.getGenreIds()){
+                for(Genre genre : genreList){
+                    if(genre.getId().equals(genreID)) {
+                        genreMovieHash.add(movie);
+                    }
+                }
+            }
+        }
+        return  new ArrayList<>(genreMovieHash) ;
     }
 }

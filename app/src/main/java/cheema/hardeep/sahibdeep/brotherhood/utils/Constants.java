@@ -8,6 +8,7 @@ public class Constants {
     public static final String APP_NAME = "Brotherhood";
     public static final String EMPTY = "";
     public static final String EN_US = "en-US";
+    public static final String HI = "Hi, ";
 
     public static final String DATA_DATE_FORMAT = "yyyy-MM-dd";
     public static final String DISPLAY_DATE_FORMAT = "EEEE ~ MMM d, yyyy";

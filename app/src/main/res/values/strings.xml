@@ -10,4 +10,12 @@
     <string name="your_actors">Your Actors</string>
     <string name="your_favourites">Your Favourites</string>
     <string name="your_genres">Your Genres</string>
+    <string name="get_tickets">Get Tickets</string>
+    <string name="theater">Theater</string>
+    <string name="release_date">Release Date</string>
+    <string name="genre">Genre</string>
+    <string name="duration">Duration</string>
+    <string name="viewing_ratings">Viewing Ratings</string>
+    <string name="summary">Summary</string>
+    <string name="cast">Cast</string>
 </resources>

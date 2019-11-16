@@ -1,7 +1,7 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
+import cheema.hardeep.sahibdeep.brotherhood.activities.DetailActivity;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
+import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_UPCOMING;
@@ -46,6 +48,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
         upcomingMovieViewHolder.movieName.setText(movie.getTitle());
         upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
         loadImageWithGlide(movie.getBackdropPath(), upcomingMovieViewHolder.movieImage);
+
+        upcomingMovieViewHolder.itemView.setOnClickListener(v ->
+                v.getContext().startActivity(DetailActivity.createIntent(v.getContext(), movie.getId())));
     }
 
     private void loadImageWithGlide(String url, ImageView imageView) {

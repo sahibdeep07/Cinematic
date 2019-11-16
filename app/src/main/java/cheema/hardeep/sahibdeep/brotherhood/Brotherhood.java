@@ -16,7 +16,7 @@ public class Brotherhood extends Application {
 
         brotherhoodComponent = DaggerBrotherhoodComponent
                 .builder()
-                .brotherhoodModule(new BrotherhoodModule())
+                .brotherhoodModule(new BrotherhoodModule(this))
                 .build();
     }
 

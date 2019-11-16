@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public class UpcomingFragment extends Fragment {
 
     RecyclerView recyclerView;
     UpcomingAdapter upcomingAdapter;
+    ProgressBar upcomingProgressBar;
 
     @Inject
     MovieApi movieApi;
@@ -55,6 +57,7 @@ public class UpcomingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
         recyclerView = view.findViewById(R.id.upcomingRecyclerView);
+        upcomingProgressBar = view.findViewById(R.id.upcomingProgressBar);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         upcomingAdapter = new UpcomingAdapter();
         recyclerView.setAdapter(upcomingAdapter);
@@ -73,6 +76,11 @@ public class UpcomingFragment extends Fragment {
         compositeDisposable.clear();
     }
 
+    public void setIsProgressBarVisible(boolean visible) {
+        upcomingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+    }
+
     private void requestUpcomingMovies() {
         compositeDisposable.add(
                 Observable.zip(
@@ -82,6 +90,8 @@ public class UpcomingFragment extends Fragment {
                         (upcoming, upcoming2, upcoming3) -> Arrays.asList(upcoming, upcoming2, upcoming3))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
                                 upcomings -> handleUpcomingMovieData(upcomings),
                                 throwable -> Log.e(UpcomingFragment.class.getSimpleName(), throwable.getMessage())

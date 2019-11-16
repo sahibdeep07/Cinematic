@@ -14,6 +14,7 @@ public class Constants {
     public static final String EMPTY = "";
     public static final String COMMA = ", ";
     public static final String EN_US = "en-US";
+    public static final String HI = "Hi, ";
     public static final String RATED_R = "18+ Rated R";
     public static final String GENERAL_AUDIENCE = "General Audience";
 

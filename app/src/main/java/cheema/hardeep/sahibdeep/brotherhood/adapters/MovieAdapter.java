@@ -25,7 +25,7 @@ import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_UPCOMING;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
 
-public class UpcomingMovieAdapter extends RecyclerView.Adapter<UpcomingMovieAdapter.UpcomingMovieViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovieViewHolder> {
 
     private List<Movie> movies = new ArrayList<>();
 

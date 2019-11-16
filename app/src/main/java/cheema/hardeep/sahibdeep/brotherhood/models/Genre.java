@@ -1,4 +1,3 @@
-
 package cheema.hardeep.sahibdeep.brotherhood.models;
 
 import android.util.Log;

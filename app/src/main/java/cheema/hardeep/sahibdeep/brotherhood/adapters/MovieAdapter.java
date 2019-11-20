@@ -46,7 +46,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
     public void onBindViewHolder(@NonNull UpcomingMovieViewHolder upcomingMovieViewHolder, int i) {
         Movie movie = movies.get(i);
         upcomingMovieViewHolder.movieName.setText(movie.getTitle());
-        upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
+
+        if(movie.getVoteAverage() != null) {
+            upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
+        } else {
+            upcomingMovieViewHolder.movieRating.setVisibility(View.GONE);
+        }
+
         loadImageWithGlide(movie.getBackdropPath(), upcomingMovieViewHolder.movieImage);
 
         upcomingMovieViewHolder.itemView.setOnClickListener(v ->

@@ -11,10 +11,10 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/homeName"
@@ -42,22 +42,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/homeYourActors"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
-                android:paddingEnd="12dp"
-                android:text="@string/your_actors"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="16sp"
-                android:typeface="serif"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/yourGenreRV" />
-
+            <!--Genre-->
             <TextView
                 android:id="@+id/homeYourGenres"
                 android:layout_width="wrap_content"
@@ -72,6 +59,58 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@id/homeYourGenres"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeYourGenres" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/yourGenreRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view" />
+
+            <!--Actor-->
+            <TextView
+                android:id="@+id/homeYourActors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:paddingEnd="12dp"
+                android:text="@string/your_actors"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="16sp"
+                android:typeface="serif"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/yourGenreRV" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@id/homeYourActors"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeYourActors" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/yourActorsRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view2" />
+
+            <!--Favorite-->
             <TextView
                 android:id="@+id/homeYourFavourites"
                 android:layout_width="wrap_content"
@@ -87,26 +126,6 @@
                 app:layout_constraintTop_toBottomOf="@id/yourActorsRV" />
 
             <View
-                android:id="@+id/view"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/colorAccent"
-                app:layout_constraintEnd_toEndOf="@id/homeYourGenres"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/homeYourGenres" />
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/colorAccent"
-                app:layout_constraintEnd_toEndOf="@id/homeYourActors"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/homeYourActors" />
-
-            <View
                 android:id="@+id/view3"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -117,27 +136,26 @@
                 app:layout_constraintTop_toBottomOf="@id/homeYourFavourites" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/yourGenreRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/yourActorsRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view2" />
-
-            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/yourFavouriteRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view3" />
+
+            <TextView
+                android:id="@+id/noFavoritesMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:typeface="serif"
+                android:layout_marginTop="12dp"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textColor="@color/colorAccent"
+                android:text="@string/you_have_no_favorite_favorite_movies_in_movie_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,6 +27,7 @@ import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.MovieAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.models.CallerType;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
@@ -58,9 +59,9 @@ public class RecommendedFragment extends Fragment {
     @BindView(R.id.noFavoritesMessage)
     TextView noFavoriteMessage;
 
-    private MovieAdapter genreAdapter = new MovieAdapter();
-    private MovieAdapter actorAdapter = new MovieAdapter();
-    private MovieAdapter favoriteAdapter = new MovieAdapter();
+    private MovieAdapter genreAdapter = new MovieAdapter(CallerType.RECOMMENDED);
+    private MovieAdapter actorAdapter = new MovieAdapter(CallerType.RECOMMENDED);
+    private MovieAdapter favoriteAdapter = new MovieAdapter(CallerType.RECOMMENDED);
 
     @Inject
     CompositeDisposable compositeDisposable;

@@ -49,6 +49,8 @@ public class Movie {
     @SerializedName("vote_count")
     private Long voteCount;
 
+    private String genreNames;
+
     public Boolean getAdult() {
         return adult;
     }
@@ -103,5 +105,13 @@ public class Movie {
 
     public Long getVoteCount() {
         return voteCount;
+    }
+
+    public String getGenreNames() {
+        return genreNames;
+    }
+
+    public void setGenreNames(String genreNames) {
+        this.genreNames = genreNames;
     }
 }

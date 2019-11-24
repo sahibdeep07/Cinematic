@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -20,21 +21,36 @@ import java.util.concurrent.TimeoutException;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.activities.DetailActivity;
+import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_UPCOMING;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIXTY;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_500;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_780;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_ORIGINAL;
 
 public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.NowPlayingViewHolder> {
 
     private List<Movie> movies = new ArrayList<>();
 
-    public void updateDataSet(List<Movie> upcomingMovies) {
+    public void updateDataSet(List<Movie> nowPlayingMovies) {
         movies.clear();
-        movies.addAll(upcomingMovies);
+        movies.addAll(nowPlayingMovies);
         notifyDataSetChanged();
     }
+
+//    public void extractGenres(List<Movie> nowPlayingMovies){
+//        movies.clear();
+//        for (Movie movie : nowPlayingMovies) {
+//            List<Long> genreID = movie.getGenreIds();
+//            for (Long id : genreID) {
+//
+//            }
+//        }
+//    }
 
     @NonNull
     @Override
@@ -49,6 +65,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.No
         holder.movieName.setText(movie.getTitle());
         holder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
         loadImageWithGlide(movie.getBackdropPath(), holder.movieImage);
+        holder.movieGenre.setText(movie.getGenreNames());
 
         holder.itemView.setOnClickListener(v ->
                 v.getContext().startActivity(DetailActivity.createIntent(v.getContext(), movie.getId())));
@@ -56,9 +73,9 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.No
 
     private void loadImageWithGlide(String url, ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(ROUNDED_CORNER_UPCOMING));
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(SIXTY));
         Glide.with(imageView.getContext())
-                .load(Utilities.createImageUrl(url, SIZE_342))
+                .load(Utilities.createImageUrl(url, SIZE_ORIGINAL))
                 .apply(requestOptions)
                 .placeholder(R.drawable.curved_bottom_right)
                 .into(imageView);

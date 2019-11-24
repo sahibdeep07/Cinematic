@@ -1,6 +1,8 @@
 package cheema.hardeep.sahibdeep.brotherhood.fragments;
 
 import android.os.Bundle;
+
+import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import org.jsoup.internal.StringUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,13 +26,18 @@ import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.NowPlayingAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
+import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.NowPlaying;
 import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.COMMA;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 
 
@@ -57,13 +67,19 @@ public class NowPlayingFragment extends Fragment {
         nowPlayingProgressBar = view.findViewById(R.id.nowPlayingProgressBar);
         nowPlayingRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         nowPlayingRV.setAdapter(nowPlayingAdapter);
-        requestNowPlayingMovies();
+        requestNowPlayingMoviesWithGenres();
         return view;
     }
 
-    private void requestNowPlayingMovies() {
-        compositeDisposable.add(
-                movieApi.getNowPlaying(EN_US, 1)
+    private void requestNowPlayingMoviesWithGenres() {
+        compositeDisposable.add(Observable.zip(
+                movieApi.getNowPlaying(EN_US, 1),
+                movieApi.getGenre(EN_US),
+                (nowPlaying, genreResponse) -> {
+                    updateMoviesWithGenreNames(nowPlaying, genreResponse);
+                    return nowPlaying;
+                }
+                )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
@@ -73,6 +89,20 @@ public class NowPlayingFragment extends Fragment {
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error in getting the Top Rated" + throwable)
                         )
         );
+    }
+
+    private void updateMoviesWithGenreNames(NowPlaying nowPlaying, GenreResponse genreResponse) {
+        for (Movie movie : nowPlaying.getResults()) {
+            List<String> genreNames = new ArrayList<>();
+            for (long genreId : movie.getGenreIds()) {
+                for (Genre genre : genreResponse.getGenres()) {
+                    if (genre.getId() == genreId) {
+                        genreNames.add(genre.getName());
+                    }
+                }
+            }
+            movie.setGenreNames(StringUtil.join(genreNames, COMMA));
+        }
     }
 
     private void setIsProgressBarVisible(boolean visible) {

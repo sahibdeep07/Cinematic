@@ -25,9 +25,12 @@ import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.MovieAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
+import cheema.hardeep.sahibdeep.brotherhood.models.Cast;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -91,34 +94,66 @@ public class RecommendedFragment extends Fragment {
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
                         .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
-                                topRated -> handleGenreResponse(topRated),
+                                this::handleTopRatedResponse,
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error in getting the Top Rated" + throwable)
                         )
         );
     }
 
-    private void handleGenreResponse(TopRated topRated) {
+    private void handleTopRatedResponse(TopRated topRated) {
         List<Movie> topRatedList = topRated.getResults();
-        actorAdapter.updateDataSet(topRatedList);
-        genreAdapter.updateDataSet(getActorsList(topRatedList, SharedPreferenceProvider.getUserGenres(getContext())));;
+        filterMoviesBasedOnUserActors(topRatedList, SharedPreferenceProvider.getUserActors(getContext()));
+        filterMoviesBasedOnUserGenres(topRatedList, SharedPreferenceProvider.getUserGenres(getContext()));
     }
 
-    public void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
+    private void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
     }
 
-    private List<Movie> getActorsList (List<Movie> movieList, List<Genre> genreList){
+    private void filterMoviesBasedOnUserActors(List<Movie> topRatedMovies, List<Actor> userActors) {
+        compositeDisposable.add(
+                Observable.fromIterable(topRatedMovies)
+                        .flatMap(movie -> movieApi.getMovieCastDetails(movie.getId()), Movie::setCastDetails)
+                        .toList()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doFinally(() -> setIsProgressBarVisible(false))
+                        .subscribe(
+                                movies -> setMoviesToActorRecyclerView(movies, userActors),
+                                throwable -> {
+                                    Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error Fetch Actors" + throwable);
+                                    actorAdapter.updateDataSet(topRatedMovies);
+                                })
+        );
+    }
+
+    private void filterMoviesBasedOnUserGenres(List<Movie> topRatedMovies, List<Genre> genreList) {
         HashSet<Movie> genreMovieHash = new HashSet<>();
-        for(Movie movie: movieList) {
-            for(long genreID: movie.getGenreIds()){
-                for(Genre genre : genreList){
-                    if(genre.getId().equals(genreID)) {
+        for (Movie movie : topRatedMovies) {
+            for (long genreID : movie.getGenreIds()) {
+                for (Genre genre : genreList) {
+                    if (genre.getId().equals(genreID)) {
                         genreMovieHash.add(movie);
                     }
                 }
             }
         }
-        return  new ArrayList<>(genreMovieHash) ;
+        genreAdapter.updateDataSet(new ArrayList<>(genreMovieHash));
+    }
+
+    private void setMoviesToActorRecyclerView(List<Movie> movies, List<Actor> userActors) {
+        HashSet<Movie> actorsMovieHash = new HashSet<>();
+        for (Movie movie : movies) {
+            for (Actor userActor : userActors) {
+                for (Cast cast : movie.getCastDetails().getCast()) {
+                    if (userActor.getName().toLowerCase().equals(cast.getName().toLowerCase())) {
+                        actorsMovieHash.add(movie);
+                    }
+                }
+            }
+        }
+        actorAdapter.updateDataSet(new ArrayList<>(actorsMovieHash));
     }
 }

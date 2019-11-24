@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import android.view.MenuItem;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.fragments.NowPlayingFragment;
 import cheema.hardeep.sahibdeep.brotherhood.fragments.RecommendedFragment;
@@ -22,14 +24,17 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         return new Intent(context, HomeActivity.class);
     }
 
+    @BindView(R.id.bottomNav)
+    BottomNavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         getSupportActionBar().hide();
-        BottomNavigationView navView = findViewById(R.id.bottomNav);
+        ButterKnife.bind(this);
         navView.setOnNavigationItemSelectedListener(this);
-        loadFragment(new RecommendedFragment());
+        loadFragment(new NowPlayingFragment());
     }
 
     @Override

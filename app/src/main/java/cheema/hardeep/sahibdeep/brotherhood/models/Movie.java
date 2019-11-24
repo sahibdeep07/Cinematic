@@ -51,6 +51,8 @@ public class Movie {
 
     private String genreNames;
 
+    private CastDetail castDetails;
+
     public Boolean getAdult() {
         return adult;
     }
@@ -113,5 +115,17 @@ public class Movie {
 
     public void setGenreNames(String genreNames) {
         this.genreNames = genreNames;
+    }
+
+    public CastDetail getCastDetails() {
+        return castDetails;
+    }
+
+    /**
+     * Returning itself of RxJava Operation
+     */
+    public Movie setCastDetails(CastDetail castDetails) {
+        this.castDetails = castDetails;
+        return this;
     }
 }

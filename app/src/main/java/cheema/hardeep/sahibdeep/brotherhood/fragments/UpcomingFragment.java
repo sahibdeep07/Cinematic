@@ -100,7 +100,9 @@ public class UpcomingFragment extends Fragment {
                         movieApi.getUpcomingMovies(EN_US, 1),
                         movieApi.getUpcomingMovies(EN_US, 2),
                         movieApi.getUpcomingMovies(EN_US, 3),
-                        (upcoming, upcoming2, upcoming3) -> Arrays.asList(upcoming, upcoming2, upcoming3))
+                        movieApi.getUpcomingMovies(EN_US, 4),
+                        movieApi.getUpcomingMovies(EN_US, 5),
+                        (upcoming, upcoming2, upcoming3, upcoming4, upcoming5) -> Arrays.asList(upcoming, upcoming2, upcoming3, upcoming4, upcoming5))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))

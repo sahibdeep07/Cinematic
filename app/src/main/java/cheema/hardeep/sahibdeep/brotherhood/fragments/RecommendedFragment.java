@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -160,6 +161,7 @@ public class RecommendedFragment extends Fragment {
     }
 
     private void filterMoviesBasedOnUserGenres(List<Movie> topRatedMovies, List<Genre> genreList) {
+        Collections.shuffle(topRatedMovies);
         HashSet<Movie> genreMovieHash = new HashSet<>();
         for (Movie movie : topRatedMovies) {
             for (long genreID : movie.getGenreIds()) {
@@ -175,6 +177,7 @@ public class RecommendedFragment extends Fragment {
     }
 
     private void setMoviesToActorRecyclerView(List<Movie> topRatedMovies, List<Actor> userActors) {
+        Collections.shuffle(topRatedMovies);
         HashSet<Movie> actorsMovieHash = new HashSet<>();
         for (Movie movie : topRatedMovies) {
             for (Actor userActor : userActors) {

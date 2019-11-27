@@ -1,25 +1,25 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
-
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_92;
 
@@ -32,7 +32,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         this.isSelectable = isSelectable;
     }
 
-    public void update(List<Actor> actorList){
+    public void update(List<Actor> actorList) {
         this.actorList.clear();
         this.actorList.addAll(actorList);
         notifyDataSetChanged();
@@ -44,7 +44,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
 
     @Override
     public ActorViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.actor_icon_design, viewGroup ,false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.actor_icon_design, viewGroup, false);
         return new ActorViewHolder(v);
     }
 
@@ -55,7 +55,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
 
         setUpActorImage(actorViewHolder.image, actor);
 
-        if(isSelectable) {
+        if (isSelectable) {
             actorViewHolder.image.setOnClickListener(v -> {
                 actor.setSelected(!actor.isSelected());
                 setImageColor(actorViewHolder.image, actor.isSelected());
@@ -76,19 +76,22 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         return actorList.size();
     }
 
-    private void setImageColor(ImageView imageView, boolean isSelected){
-        if(isSelected) imageView.setBackgroundResource(R.drawable.circular_background_selected);
+    private void setImageColor(ImageView imageView, boolean isSelected) {
+        if (isSelected) imageView.setBackgroundResource(R.drawable.circular_background_selected);
         else imageView.setBackgroundResource(R.drawable.circular_background);
     }
 
-    class ActorViewHolder extends RecyclerView.ViewHolder{
+    class ActorViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.actorName)
         TextView name;
+
+        @BindView(R.id.actorIcon)
         ImageView image;
 
         public ActorViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.actorName);
-            image = itemView.findViewById(R.id.actorIcon);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

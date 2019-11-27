@@ -52,13 +52,13 @@ public class UpcomingFragment extends Fragment {
     @BindView(R.id.upcomingProgressBar)
     ProgressBar upcomingProgressBar;
 
-    private MovieAdapter movieAdapter;
-
     @Inject
     MovieApi movieApi;
 
     @Inject
     CompositeDisposable compositeDisposable;
+
+    private MovieAdapter movieAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class UpcomingFragment extends Fragment {
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
                         .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
-                                upcomings -> handleUpcomingMovieData(upcomings),
+                                this::handleUpcomingMovieData,
                                 throwable -> Log.e(UpcomingFragment.class.getSimpleName(), throwable.getMessage())
                         )
         );

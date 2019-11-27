@@ -1,6 +1,5 @@
 package cheema.hardeep.sahibdeep.brotherhood.database;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
@@ -12,34 +11,40 @@ import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.UserInfo;
 
-
 /**
  * This class store user preferences as UserInfo object
  * -- Object cannot be stored directly into shared preferences so this class uses GSON to convert
  * object into string and store it
  * -- Upon getting the user preferences, with help of GSON string is convert back to UserInfo object
  */
-public class SharedPreferenceProvider {
+public class UserInfoManager {
 
     private static final String USER_INFO_PREFERENCES = "user-info-preferences";
     private static final String KEY_USER_INFO = "user-info";
     private static final String KEY_FIRST_LAUNCH = "first-launch";
-    private static Gson gson = new Gson();
+
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+
+    public UserInfoManager(SharedPreferences sharedPreferences, Gson gson) {
+        this.sharedPreferences = sharedPreferences;
+        this.gson = gson;
+    }
 
     /**
      * Update first launch flag in shared preferences to not show
      * first launch screens again
      */
-    public static void saveFirstLaunchCompleted(Context context) {
-        getUserInfoPreferences(context).edit().putBoolean(KEY_FIRST_LAUNCH, false).apply();
+    public void saveFirstLaunchCompleted() {
+        sharedPreferences.edit().putBoolean(KEY_FIRST_LAUNCH, false).apply();
     }
 
     /**
      * If user already been through first launch the method return false
      * else it return true (default)
      */
-    public static boolean isFirstLaunch(Context context) {
-        return getUserInfoPreferences(context).getBoolean(KEY_FIRST_LAUNCH, true);
+    public boolean isFirstLaunch() {
+        return sharedPreferences.getBoolean(KEY_FIRST_LAUNCH, true);
     }
 
 
@@ -49,10 +54,10 @@ public class SharedPreferenceProvider {
      * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
      * provided name and save it
      */
-    public static void saveUserName(Context context, String name) {
-        UserInfo userInfo = getUserInfo(context);
+    public void saveUserName(String name) {
+        UserInfo userInfo = getUserInfo();
         userInfo.setName(name);
-        saveUserInfo(context, userInfo);
+        saveUserInfo(userInfo);
     }
 
     /**
@@ -60,8 +65,8 @@ public class SharedPreferenceProvider {
      * This method get the UserInfo object from shared preference if it exist then return the name
      * from object
      */
-    public static String getUserName(Context context) {
-        return getUserInfo(context).getName();
+    public String getUserName() {
+        return getUserInfo().getName();
     }
 
     /**
@@ -70,10 +75,10 @@ public class SharedPreferenceProvider {
      * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
      * provided genres and save it
      */
-    public static void saveUserGenres(Context context, List<Genre> genres) {
-        UserInfo userInfo = getUserInfo(context);
+    public void saveUserGenres(List<Genre> genres) {
+        UserInfo userInfo = getUserInfo();
         userInfo.setGenres(genres);
-        saveUserInfo(context, userInfo);
+        saveUserInfo(userInfo);
     }
 
     /**
@@ -81,8 +86,8 @@ public class SharedPreferenceProvider {
      * This method get the UserInfo object from shared preference if it exist then return the genres
      * from object
      */
-    public static List<Genre> getUserGenres(Context context) {
-        return getUserInfo(context).getGenres();
+    public List<Genre> getUserGenres() {
+        return getUserInfo().getGenres();
     }
 
     /**
@@ -91,10 +96,10 @@ public class SharedPreferenceProvider {
      * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
      * provided actors and save it
      */
-    public static void saveUserActors(Context context, List<Actor> actors) {
-        UserInfo userInfo = getUserInfo(context);
+    public void saveUserActors(List<Actor> actors) {
+        UserInfo userInfo = getUserInfo();
         userInfo.setActors(actors);
-        saveUserInfo(context, userInfo);
+        saveUserInfo(userInfo);
     }
 
     /**
@@ -102,8 +107,8 @@ public class SharedPreferenceProvider {
      * This method get the UserInfo object from shared preference if it exist then return the actors
      * from object
      */
-    public static List<Actor> getUserActors(Context context) {
-        return getUserInfo(context).getActors();
+    public List<Actor> getUserActors() {
+        return getUserInfo().getActors();
     }
 
     /**
@@ -112,23 +117,23 @@ public class SharedPreferenceProvider {
      * If UserInfo object doesn't not exist in shared preferences then it creates a new object with
      * provided favorite and save it
      */
-    public static void addUserFavorite(Context context, MovieDetail movieDetail) {
-        UserInfo userInfo = getUserInfo(context);
+    public void addUserFavorite(MovieDetail movieDetail) {
+        UserInfo userInfo = getUserInfo();
         userInfo.getFavoritesList().add(movieDetail);
-        saveUserInfo(context, userInfo);
+        saveUserInfo(userInfo);
     }
 
     /**
      * Remove user favorite to shared preferences
      * This method get the UserInfo object from shared preference if it exist then remove the favorite
      */
-    public static void removeUserFavorite(Context context, MovieDetail targetMovieDetail) {
-        UserInfo userInfo = getUserInfo(context);
+    public void removeUserFavorite(MovieDetail targetMovieDetail) {
+        UserInfo userInfo = getUserInfo();
         for (MovieDetail movieDetail : userInfo.getFavoritesList()) {
             if (movieDetail.getId().equals(targetMovieDetail.getId()))
                 userInfo.getFavoritesList().remove(movieDetail);
         }
-        saveUserInfo(context, userInfo);
+        saveUserInfo(userInfo);
     }
 
     /**
@@ -136,30 +141,24 @@ public class SharedPreferenceProvider {
      * This method get the UserInfo object from shared preference if it exist then return the favorites
      * from object
      */
-    public static List<MovieDetail> getUserFavorites(Context context) {
-        return getUserInfo(context).getFavoritesList();
+    public List<MovieDetail> getUserFavorites() {
+        return getUserInfo().getFavoritesList();
     }
 
     /**
      * Get full userInfo from shared preferences if its exits
      */
-    public static UserInfo getFullUserInfo(Context context) {
-        return getUserInfo(context);
+    public UserInfo getFullUserInfo() {
+        return getUserInfo();
     }
 
-    private static UserInfo getUserInfo(Context context) {
-        String userInfoJson = getUserInfoPreferences(context).getString(KEY_USER_INFO, null);
+    private UserInfo getUserInfo() {
+        String userInfoJson = sharedPreferences.getString(KEY_USER_INFO, null);
         return userInfoJson != null ? gson.fromJson(userInfoJson, UserInfo.class) : new UserInfo();
     }
 
-    private static void saveUserInfo(Context context, UserInfo userInfo) {
-        SharedPreferences.Editor editor = getUserInfoPreferences(context).edit();
-        editor.putString(KEY_USER_INFO, gson.toJson(userInfo));
-        editor.apply();
+    private void saveUserInfo(UserInfo userInfo) {
+        sharedPreferences.edit().putString(KEY_USER_INFO, gson.toJson(userInfo)).apply();
     }
 
-
-    private static SharedPreferences getUserInfoPreferences(Context context) {
-        return context.getSharedPreferences(USER_INFO_PREFERENCES, Context.MODE_PRIVATE);
-    }
 }

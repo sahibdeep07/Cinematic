@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.models.Cast;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
@@ -55,13 +56,16 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
     }
 
     class CastViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.castImage)
         ImageView castImage;
+
+        @BindView(R.id.castName)
         TextView castName;
 
         public CastViewHolder(@NonNull View itemView) {
             super(itemView);
-            castImage = itemView.findViewById(R.id.castImage);
-            castName = itemView.findViewById(R.id.castName);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

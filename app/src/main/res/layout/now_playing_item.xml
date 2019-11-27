@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_marginStart="6dp"
     android:layout_marginTop="12dp"
     android:layout_marginEnd="24dp"
-    >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/nowPlayingImageView"
-        android:layout_width="300dp"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/bookmark"
         android:layout_width="60dp"
         android:layout_height="80dp"
-        app:srcCompat="@drawable/bookmark_icon"
+        android:layout_marginEnd="4dp"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toTopOf="@id/nowPlayingImageView"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingImageView"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_bookmark" />
 
     <TextView
         android:id="@+id/nowPlayingRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:gravity="center"
+        android:textColor="@color/primaryTextColor"
         android:textSize="16sp"
         android:typeface="serif"
-        app:layout_constraintTop_toTopOf="@id/bookmark"
-        app:layout_constraintStart_toStartOf="@id/bookmark"
+        app:layout_constraintBottom_toBottomOf="@id/bookmark"
         app:layout_constraintEnd_toEndOf="@id/bookmark"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/primaryTextColor"
-        />
+        app:layout_constraintStart_toStartOf="@id/bookmark"
+        app:layout_constraintTop_toTopOf="@id/bookmark" />
 
     <TextView
         android:id="@+id/nowPlayingMovieName"
@@ -47,56 +45,54 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="4dp"
-        android:text="TextView"
         android:textColor="@color/primaryTextColor"
         android:textSize="22sp"
         android:typeface="serif"
         app:layout_constraintBottom_toTopOf="@id/nowPlayingGenre"
         app:layout_constraintEnd_toEndOf="@id/nowPlayingImageView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/nowPlayingGenre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:typeface="serif"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/theatreButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingImageView"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="12dp"
         android:textColor="@color/primaryTextColor"
-        />
-
-    <Button
-        android:id="@+id/theatreButton"
-        android:layout_width="0dp"
-        android:layout_height="34dp"
-        android:text="Button"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="12dp"
+        android:textSize="18sp"
         android:typeface="serif"
-        android:background="@drawable/nowplaying_curve"
-        app:layout_constraintEnd_toStartOf="@id/ticketButton"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nowPlayingTheatreButton"
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingImageView"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        tools:text="TextView" />
 
     <Button
-        android:id="@+id/ticketButton"
+        android:id="@+id/nowPlayingTheatreButton"
         android:layout_width="0dp"
         android:layout_height="34dp"
-        android:text="Button"
+        android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
-        android:typeface="serif"
         android:background="@drawable/nowplaying_curve"
-        android:layout_marginStart="12dp"
-        app:layout_constraintStart_toEndOf="@id/theatreButton"
+        android:text="@string/theater"
+        android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/nowPlayingImageView"/>
+        app:layout_constraintEnd_toStartOf="@id/nowPlayingTicketButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/nowPlayingTicketButton"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/nowplaying_curve"
+        android:text="@string/tickets"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/nowPlayingImageView"
+        app:layout_constraintStart_toEndOf="@id/nowPlayingTheatreButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

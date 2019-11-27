@@ -1,16 +1,19 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 
@@ -67,13 +70,16 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
     }
 
     class GenreViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.genreIcon)
         ImageView icon;
+
+        @BindView(R.id.genreName)
         TextView name;
 
         GenreViewHolder(View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.genreIcon);
-            name = itemView.findViewById(R.id.genreName);
+            ButterKnife.bind(this, itemView);
         }
     }
 

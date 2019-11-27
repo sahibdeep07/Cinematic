@@ -15,10 +15,10 @@ import javax.inject.Inject;
 
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
-import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
 import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
+import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 
-import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.FEATURE_UNAVALIABLE;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.FEATURE_UNAVAILABLE;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -27,6 +27,9 @@ public class SplashActivity extends AppCompatActivity {
 
     @Inject
     LocationService locationService;
+
+    @Inject
+    UserInfoManager userInfoManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class SplashActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_REQUEST_CODE);
         } else {
+            locationService.requestSingleLocation(null);
             transition();
         }
     }
@@ -53,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, FEATURE_UNAVALIABLE, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, FEATURE_UNAVAILABLE, Toast.LENGTH_LONG).show();
         } else {
             locationService.requestSingleLocation(null);
         }
@@ -61,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void transition() {
-        Intent intent = SharedPreferenceProvider.isFirstLaunch(this)
+        Intent intent = userInfoManager.isFirstLaunch()
                 ? NameActivity.createIntent(this) : HomeActivity.createIntent(this);
         startActivity(intent);
         finish();

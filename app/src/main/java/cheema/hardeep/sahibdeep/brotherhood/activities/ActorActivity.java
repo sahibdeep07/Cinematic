@@ -3,26 +3,29 @@ package cheema.hardeep.sahibdeep.brotherhood.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.Group;
-import androidx.constraintlayout.widget.Guideline;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
+import androidx.constraintlayout.widget.Guideline;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.ActorAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
-import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -38,12 +41,25 @@ public class ActorActivity extends AppCompatActivity {
     private static final float PERCENT_30 = 0.30f;
     private static final float PERCENT_0 = 0.00f;
 
+    @BindView(R.id.actorsRecyclerView)
     RecyclerView actorsRecyclerView;
-    ActorAdapter actorAdapter;
-    View moveToHomeOrSaveBackground, moveToGenreBackground;
+
+    @BindView(R.id.moveToHomeOrSaveBackground)
+    View moveToHomeOrSaveBackground;
+
+    @BindView(R.id.moveToGenreBackground)
+    View moveToGenreBackground;
+
+    @BindView(R.id.actorProgressBar)
     ProgressBar actorsProgressBar;
+
+    @BindView(R.id.actorGuideline)
     Guideline actorGuideline;
+
+    @BindView(R.id.moveToHomeOrSave)
     TextView moveToHomeOrSave;
+
+    @BindView(R.id.genreGroup)
     Group genreGroup;
 
     @Inject
@@ -51,6 +67,12 @@ public class ActorActivity extends AppCompatActivity {
 
     @Inject
     MovieApi movieApi;
+
+    @Inject
+    UserInfoManager userInfoManager;
+
+    private ActorAdapter actorAdapter;
+
 
     public static Intent createIntent(Context context) {
         return new Intent(context, ActorActivity.class);
@@ -62,8 +84,8 @@ public class ActorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_actor);
         getSupportActionBar().hide();
         ((Brotherhood) getApplication()).getBrotherhoodComponent().inject(this);
+        ButterKnife.bind(this);
 
-        findViews();
         setupBottomButtonsAndGuideline();
         setListeners();
         setupRecyclerView();
@@ -76,18 +98,8 @@ public class ActorActivity extends AppCompatActivity {
         compositeDisposable.clear();
     }
 
-    private void findViews() {
-        moveToGenreBackground = findViewById(R.id.moveToGenreBackground);
-        moveToHomeOrSaveBackground = findViewById(R.id.moveToHomeOrSaveBackground);
-        actorsProgressBar = findViewById(R.id.actorProgressBar);
-        actorsRecyclerView = findViewById(R.id.actorsRecyclerView);
-        actorGuideline = findViewById(R.id.actorGuideline);
-        moveToHomeOrSave = findViewById(R.id.moveToHomeOrSave);
-        genreGroup = findViewById(R.id.genreGroup);
-    }
-
     private void setupBottomButtonsAndGuideline() {
-        boolean isFirstLaunch = SharedPreferenceProvider.isFirstLaunch(this);
+        boolean isFirstLaunch = userInfoManager.isFirstLaunch();
         genreGroup.setVisibility(isFirstLaunch ? View.VISIBLE : View.GONE);
         actorGuideline.setGuidelinePercent(isFirstLaunch ? PERCENT_30 : PERCENT_0);
         moveToHomeOrSave.setText(isFirstLaunch ? HOME : SAVE);
@@ -124,7 +136,7 @@ public class ActorActivity extends AppCompatActivity {
     }
 
     private void handleActorResponse(ActorResponse actorResponse) {
-        List<Actor> userActors = SharedPreferenceProvider.getUserActors(this);
+        List<Actor> userActors = userInfoManager.getUserActors();
         for (Actor actor : actorResponse.getActors()) {
             //Pre Select Genre if already in SharedPreferences
             if (!userActors.isEmpty()) {
@@ -154,14 +166,14 @@ public class ActorActivity extends AppCompatActivity {
     }
 
     private void saveSelectedActors(ArrayList<Actor> selectedActors) {
-        SharedPreferenceProvider.saveUserActors(this, selectedActors);
+        userInfoManager.saveUserActors(selectedActors);
         handleTransition();
     }
 
     private void handleTransition() {
-        if (SharedPreferenceProvider.isFirstLaunch(this)) {
+        if (userInfoManager.isFirstLaunch()) {
             startActivity(HomeActivity.createIntent(this));
-            SharedPreferenceProvider.saveFirstLaunchCompleted(this);
+            userInfoManager.saveFirstLaunchCompleted();
         } else {
             finish();
         }

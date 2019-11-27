@@ -20,12 +20,12 @@ import cheema.hardeep.sahibdeep.brotherhood.fragments.UpcomingFragment;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    @BindView(R.id.bottomNav)
+    BottomNavigationView navView;
+
     public static Intent createIntent(Context context) {
         return new Intent(context, HomeActivity.class);
     }
-
-    @BindView(R.id.bottomNav)
-    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

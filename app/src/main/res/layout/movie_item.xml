@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/upcomingMovieImage"
+        android:id="@+id/movieImage"
         android:layout_width="200dp"
         android:layout_height="150dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,7 +16,7 @@
         android:src="@drawable/curved_bottom_right" />
 
     <TextView
-        android:id="@+id/upcomingMovieRating"
+        android:id="@+id/movieRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -24,12 +24,12 @@
         android:textColor="@color/primaryTextColor"
         android:textSize="16sp"
         android:typeface="serif"
-        app:layout_constraintEnd_toEndOf="@id/upcomingMovieImage"
-        app:layout_constraintTop_toTopOf="@id/upcomingMovieImage"
+        app:layout_constraintEnd_toEndOf="@id/movieImage"
+        app:layout_constraintTop_toTopOf="@id/movieImage"
         tools:text="95" />
 
     <TextView
-        android:id="@+id/upcomingMovieName"
+        android:id="@+id/movieName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -40,9 +40,9 @@
         android:typeface="serif"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@id/upcomingMovieImage"
-        app:layout_constraintStart_toStartOf="@id/upcomingMovieImage"
-        app:layout_constraintEnd_toEndOf="@id/upcomingMovieImage"
+        app:layout_constraintBottom_toBottomOf="@id/movieImage"
+        app:layout_constraintStart_toStartOf="@id/movieImage"
+        app:layout_constraintEnd_toEndOf="@id/movieImage"
         tools:text="Kabir Singh" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

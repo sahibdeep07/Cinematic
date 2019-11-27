@@ -30,7 +30,7 @@ import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.CastAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
-import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 import cheema.hardeep.sahibdeep.brotherhood.models.CastDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
@@ -107,6 +107,9 @@ public class DetailActivity extends AppCompatActivity {
 
     @Inject
     LocationService locationService;
+
+    @Inject
+    UserInfoManager userInfoManager;
 
     private MovieDetail movieDetail;
 
@@ -209,10 +212,10 @@ public class DetailActivity extends AppCompatActivity {
 
         favoriteIcon.setOnClickListener(v -> {
             if (favoriteIcon.isSelected()) {
-                SharedPreferenceProvider.removeUserFavorite(this, movieDetail);
+                userInfoManager.removeUserFavorite(movieDetail);
                 updateFavoriteIcon(false);
             } else {
-                SharedPreferenceProvider.addUserFavorite(this, movieDetail);
+                userInfoManager.addUserFavorite(movieDetail);
                 updateFavoriteIcon(true);
             }
         });
@@ -241,7 +244,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setUpView() {
-        for (MovieDetail userFavorite : SharedPreferenceProvider.getUserFavorites(this)) {
+        for (MovieDetail userFavorite : userInfoManager.getUserFavorites()) {
             if (userFavorite.getId().equals(movieDetail.getId())) {
                 updateFavoriteIcon(true);
                 return;

@@ -28,7 +28,7 @@ import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.MovieAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
-import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.CallerType;
 import cheema.hardeep.sahibdeep.brotherhood.models.Cast;
@@ -76,6 +76,9 @@ public class RecommendedFragment extends Fragment {
     @Inject
     MovieApi movieApi;
 
+    @Inject
+    UserInfoManager userInfoManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +105,7 @@ public class RecommendedFragment extends Fragment {
     }
 
     private void requestFavorites() {
-        List<Movie> favoriteMovies = convertMovieDetailToMovie(SharedPreferenceProvider.getUserFavorites(getContext()));
+        List<Movie> favoriteMovies = convertMovieDetailToMovie(userInfoManager.getUserFavorites());
         if(favoriteMovies.isEmpty()) {
             favouritesRecyclerView.setVisibility(View.GONE);
             noFavoriteMessage.setVisibility(View.VISIBLE);
@@ -133,8 +136,10 @@ public class RecommendedFragment extends Fragment {
 
     private void handleTopRatedResponse(TopRated topRated) {
         List<Movie> topRatedList = topRated.getResults();
-        filterMoviesBasedOnUserActors(topRatedList, SharedPreferenceProvider.getUserActors(getContext()));
-        filterMoviesBasedOnUserGenres(topRatedList, SharedPreferenceProvider.getUserGenres(getContext()));
+        Collections.shuffle(topRatedList);
+        filterMoviesBasedOnUserActors(topRatedList, userInfoManager.getUserActors());
+        Collections.shuffle(topRatedList);
+        filterMoviesBasedOnUserGenres(topRatedList, userInfoManager.getUserGenres());
     }
 
     private void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
@@ -143,53 +148,63 @@ public class RecommendedFragment extends Fragment {
     }
 
     private void filterMoviesBasedOnUserActors(List<Movie> topRatedMovies, List<Actor> userActors) {
-        compositeDisposable.add(
-                Observable.fromIterable(topRatedMovies)
-                        .flatMap(movie -> movieApi.getMovieCastDetails(movie.getId()), Movie::setCastDetails)
-                        .toList()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
-                        .doFinally(() -> setIsProgressBarVisible(false))
-                        .subscribe(
-                                movies -> setMoviesToActorRecyclerView(movies, userActors),
-                                throwable -> {
-                                    Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error Fetch Actors" + throwable);
-                                    actorAdapter.updateDataSet(topRatedMovies);
-                                })
-        );
+        if(!userActors.isEmpty()) {
+            compositeDisposable.add(
+                    Observable.fromIterable(topRatedMovies)
+                            .flatMap(movie -> movieApi.getMovieCastDetails(movie.getId()), Movie::setCastDetails)
+                            .toList()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                            .doFinally(() -> setIsProgressBarVisible(false))
+                            .subscribe(
+                                    movies -> setMoviesToActorRecyclerView(movies, userActors),
+                                    throwable -> {
+                                        Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error Fetch Actors" + throwable);
+                                        actorAdapter.updateDataSet(topRatedMovies);
+                                    })
+            );
+        } else {
+            setMoviesToActorRecyclerView(topRatedMovies, userActors);
+        }
     }
 
-    private void filterMoviesBasedOnUserGenres(List<Movie> topRatedMovies, List<Genre> genreList) {
-        Collections.shuffle(topRatedMovies);
-        HashSet<Movie> genreMovieHash = new HashSet<>();
-        for (Movie movie : topRatedMovies) {
-            for (long genreID : movie.getGenreIds()) {
-                for (Genre genre : genreList) {
-                    if (genre.getId().equals(genreID)) {
-                        genreMovieHash.add(movie);
+    private void filterMoviesBasedOnUserGenres(List<Movie> topRatedMovies, List<Genre> userGenres) {
+        if(!userGenres.isEmpty()) {
+            HashSet<Movie> genreMovieHash = new HashSet<>();
+            for (Movie movie : topRatedMovies) {
+                for (long genreID : movie.getGenreIds()) {
+                    for (Genre genre : userGenres) {
+                        if (genre.getId().equals(genreID)) {
+                            genreMovieHash.add(movie);
+                        }
                     }
                 }
             }
+            genreAdapter.updateDataSet(new ArrayList<>(genreMovieHash));
+        } else {
+            Toast.makeText(getContext(), NO_GENRE, Toast.LENGTH_SHORT).show();
+            genreAdapter.updateDataSet(topRatedMovies);
         }
-        Toast.makeText(getContext(), NO_GENRE, Toast.LENGTH_SHORT).show();
-        genreAdapter.updateDataSet(genreMovieHash.isEmpty()? topRatedMovies: new ArrayList<>(genreMovieHash));
     }
 
     private void setMoviesToActorRecyclerView(List<Movie> topRatedMovies, List<Actor> userActors) {
-        Collections.shuffle(topRatedMovies);
-        HashSet<Movie> actorsMovieHash = new HashSet<>();
-        for (Movie movie : topRatedMovies) {
-            for (Actor userActor : userActors) {
-                for (Cast cast : movie.getCastDetails().getCast()) {
-                    if (userActor.getName().toLowerCase().equals(cast.getName().toLowerCase())) {
-                        actorsMovieHash.add(movie);
+        if(!userActors.isEmpty()) {
+            HashSet<Movie> actorsMovieHash = new HashSet<>();
+            for (Movie movie : topRatedMovies) {
+                for (Actor userActor : userActors) {
+                    for (Cast cast : movie.getCastDetails().getCast()) {
+                        if (userActor.getName().toLowerCase().equals(cast.getName().toLowerCase())) {
+                            actorsMovieHash.add(movie);
+                        }
                     }
                 }
             }
+            actorAdapter.updateDataSet(new ArrayList<>(actorsMovieHash));
+        } else {
+            Toast.makeText(getContext(), NO_ACTOR, Toast.LENGTH_SHORT).show();
+            actorAdapter.updateDataSet(topRatedMovies);
         }
-        Toast.makeText(getContext(), NO_ACTOR, Toast.LENGTH_SHORT).show();
-        actorAdapter.updateDataSet(actorsMovieHash.isEmpty() ? topRatedMovies: new ArrayList<>(actorsMovieHash));
     }
 
     private List<Movie> convertMovieDetailToMovie(List<MovieDetail> movieDetails) {

@@ -1,12 +1,13 @@
 package cheema.hardeep.sahibdeep.brotherhood.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -16,6 +17,8 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.activities.DetailActivity;
 import cheema.hardeep.sahibdeep.brotherhood.models.CallerType;
@@ -52,7 +55,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
         Movie movie = movies.get(i);
         upcomingMovieViewHolder.movieName.setText(movie.getTitle());
 
-        if(movie.getVoteAverage() != null && !callerType.isUpcoming()) {
+        if (movie.getVoteAverage() != null && !callerType.isUpcoming()) {
             upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
         } else {
             upcomingMovieViewHolder.movieRating.setVisibility(View.GONE);
@@ -81,15 +84,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
 
     class UpcomingMovieViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.movieImage)
         ImageView movieImage;
+
+        @BindView(R.id.movieRating)
         TextView movieRating;
+
+        @BindView(R.id.movieName)
         TextView movieName;
 
         UpcomingMovieViewHolder(View itemView) {
             super(itemView);
-            movieImage = itemView.findViewById(R.id.upcomingMovieImage);
-            movieRating = itemView.findViewById(R.id.upcomingMovieRating);
-            movieName = itemView.findViewById(R.id.upcomingMovieName);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

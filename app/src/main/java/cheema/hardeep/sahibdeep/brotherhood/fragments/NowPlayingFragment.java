@@ -1,19 +1,17 @@
 package cheema.hardeep.sahibdeep.brotherhood.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.MainThread;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jsoup.internal.StringUtil;
 
@@ -27,17 +25,16 @@ import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.NowPlayingAdapter;
+import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
-import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.NowPlaying;
-import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.COMMA;
@@ -53,6 +50,12 @@ public class NowPlayingFragment extends Fragment {
     @Inject
     CompositeDisposable compositeDisposable;
 
+    @Inject
+    LocationService locationService;
+
+    @Inject
+    UserInfoManager userInfoManager;
+
     @BindView(R.id.nowPlayingTitle)
     TextView name;
 
@@ -62,7 +65,7 @@ public class NowPlayingFragment extends Fragment {
     @BindView(R.id.nowPlayingProgressBar)
     ProgressBar nowPlayingProgressBar;
 
-    private NowPlayingAdapter nowPlayingAdapter = new NowPlayingAdapter();
+    private NowPlayingAdapter nowPlayingAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,8 +79,9 @@ public class NowPlayingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_now_playing, container, false);
         ButterKnife.bind(this, view);
 
-        name.setText(HI + SharedPreferenceProvider.getUserName(getContext()));
+        name.setText(HI + userInfoManager.getUserName());
         nowPlayingRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        nowPlayingAdapter = new NowPlayingAdapter(locationService);
         nowPlayingRV.setAdapter(nowPlayingAdapter);
         requestNowPlayingMoviesWithGenres();
         return view;

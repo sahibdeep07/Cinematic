@@ -1,11 +1,16 @@
 package cheema.hardeep.sahibdeep.brotherhood.dagger;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
 
 import javax.inject.Singleton;
 
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.api.LocationService;
+import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
@@ -19,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class BrotherhoodModule {
 
+    private static final String USER_INFO_PREFERENCES = "user-info-preferences";
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String API_KEY_PARAMETER_NAME = "api_key";
     private static final String API_KEY = "5812e4b63553d1273a420416fddeed72";
@@ -26,6 +32,21 @@ public class BrotherhoodModule {
 
     public BrotherhoodModule(Application application) {
         this.application = application;
+    }
+
+    @Provides
+    SharedPreferences getSharedPreferences() {
+        return application.getBaseContext().getSharedPreferences(USER_INFO_PREFERENCES, Context.MODE_PRIVATE);
+    }
+
+    @Provides
+    Gson provideGson() {
+        return new Gson();
+    }
+
+    @Provides
+    UserInfoManager getUserInfoManager(SharedPreferences sharedPreferences, Gson gson) {
+        return new UserInfoManager(sharedPreferences, gson);
     }
 
     @Provides
@@ -42,8 +63,7 @@ public class BrotherhoodModule {
                     HttpUrl newUrlWithApiKey = originalUrl.newBuilder().addQueryParameter(API_KEY_PARAMETER_NAME, API_KEY).build();
                     Request newRequestWithApiKey = original.newBuilder().url(newUrlWithApiKey).build();
                     return chain.proceed(newRequestWithApiKey);
-                })
-                .build();
+                }).build();
     }
 
     @Provides

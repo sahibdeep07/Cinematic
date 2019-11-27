@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.jsoup.internal.StringUtil;
 
@@ -21,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.NowPlayingAdapter;
@@ -39,6 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.COMMA;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
+import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HI;
 
 
 public class NowPlayingFragment extends Fragment {
@@ -49,8 +53,15 @@ public class NowPlayingFragment extends Fragment {
     @Inject
     CompositeDisposable compositeDisposable;
 
-    private RecyclerView nowPlayingRV;
-    private ProgressBar nowPlayingProgressBar;
+    @BindView(R.id.nowPlayingTitle)
+    TextView name;
+
+    @BindView(R.id.nowPlayingRV)
+    RecyclerView nowPlayingRV;
+
+    @BindView(R.id.nowPlayingProgressBar)
+    ProgressBar nowPlayingProgressBar;
+
     private NowPlayingAdapter nowPlayingAdapter = new NowPlayingAdapter();
 
     @Override
@@ -63,8 +74,9 @@ public class NowPlayingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_now_playing, container, false);
-        nowPlayingRV = view.findViewById(R.id.nowPlayingRV);
-        nowPlayingProgressBar = view.findViewById(R.id.nowPlayingProgressBar);
+        ButterKnife.bind(this, view);
+
+        name.setText(HI + SharedPreferenceProvider.getUserName(getContext()));
         nowPlayingRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         nowPlayingRV.setAdapter(nowPlayingAdapter);
         requestNowPlayingMoviesWithGenres();

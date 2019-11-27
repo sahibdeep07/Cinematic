@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,16 +41,19 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HI;
 
 public class RecommendedFragment extends Fragment {
-    TextView name;
+
     ProgressBar recommendedProgressBar;
     RecyclerView genresRecyclerView;
     RecyclerView actorsRecyclerView;
     RecyclerView favouritesRecyclerView;
+    ScrollView homeScrollView;
 
+    private static final String NO_GENRE = "No Genres Selected Showing all Results";
+    private static final String NO_ACTOR = "No Actors Selected Showing all Results";
 
-    MovieAdapter genreAdapter = new MovieAdapter();
-    MovieAdapter actorAdapter = new MovieAdapter();
-    MovieAdapter favoriteAdapter = new MovieAdapter();
+    private MovieAdapter genreAdapter = new MovieAdapter();
+    private MovieAdapter actorAdapter = new MovieAdapter();
+    private MovieAdapter favoriteAdapter = new MovieAdapter();
 
     @Inject
     CompositeDisposable compositeDisposable;
@@ -65,13 +70,11 @@ public class RecommendedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommended, container, false);
-        name = view.findViewById(R.id.homeName);
         recommendedProgressBar = view.findViewById(R.id.progressBar);
         genresRecyclerView = view.findViewById(R.id.yourGenreRV);
         actorsRecyclerView = view.findViewById(R.id.yourActorsRV);
         favouritesRecyclerView = view.findViewById(R.id.yourFavouriteRV);
-        name.setText(HI + SharedPreferenceProvider.getUserName(getContext()));
-
+        homeScrollView = view.findViewById(R.id.homeScrollView);
 
         setRecyclerView(genresRecyclerView, genreAdapter);
         setRecyclerView(actorsRecyclerView, actorAdapter);
@@ -83,7 +86,7 @@ public class RecommendedFragment extends Fragment {
 
     public void setIsProgressBarVisible(boolean visible) {
         recommendedProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
-        genresRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+        homeScrollView.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     private void requestTopRatedMovies() {
@@ -92,7 +95,6 @@ public class RecommendedFragment extends Fragment {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
-                        .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
                                 this::handleTopRatedResponse,
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error in getting the Top Rated" + throwable)
@@ -140,12 +142,13 @@ public class RecommendedFragment extends Fragment {
                 }
             }
         }
-        genreAdapter.updateDataSet(new ArrayList<>(genreMovieHash));
+        Toast.makeText(getContext(), NO_GENRE, Toast.LENGTH_SHORT).show();
+        genreAdapter.updateDataSet(genreMovieHash.isEmpty()? topRatedMovies: new ArrayList<>(genreMovieHash));
     }
 
-    private void setMoviesToActorRecyclerView(List<Movie> movies, List<Actor> userActors) {
+    private void setMoviesToActorRecyclerView(List<Movie> topRatedMovies, List<Actor> userActors) {
         HashSet<Movie> actorsMovieHash = new HashSet<>();
-        for (Movie movie : movies) {
+        for (Movie movie : topRatedMovies) {
             for (Actor userActor : userActors) {
                 for (Cast cast : movie.getCastDetails().getCast()) {
                     if (userActor.getName().toLowerCase().equals(cast.getName().toLowerCase())) {
@@ -154,6 +157,7 @@ public class RecommendedFragment extends Fragment {
                 }
             }
         }
-        actorAdapter.updateDataSet(new ArrayList<>(actorsMovieHash));
+        Toast.makeText(getContext(), NO_ACTOR, Toast.LENGTH_SHORT).show();
+        actorAdapter.updateDataSet(actorsMovieHash.isEmpty() ? topRatedMovies: new ArrayList<>(actorsMovieHash));
     }
 }

@@ -18,5 +18,7 @@
     <string name="viewing_ratings">Viewing Ratings</string>
     <string name="summary">Summary</string>
     <string name="cast">Cast</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="recommended">Recommended</string>
     <string name="you_have_no_favorite_favorite_movies_in_movie_details">You have no favorites, You can favorite movies in movie details.</string>
 </resources>

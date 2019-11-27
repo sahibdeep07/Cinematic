@@ -3,6 +3,7 @@ package cheema.hardeep.sahibdeep.brotherhood.api;
 import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
 import cheema.hardeep.sahibdeep.brotherhood.models.CastDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
+import cheema.hardeep.sahibdeep.brotherhood.models.NowPlaying;
 import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
 import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.Upcoming;
@@ -30,4 +31,7 @@ public interface MovieApi {
 
     @GET("movie/{id}/credits")
     Observable<CastDetail> getMovieCastDetails(@Path("id") long movieId);
+
+    @GET("movie/now_playing")
+    Observable<NowPlaying> getNowPlaying(@Query("language") String language, @Query("page") int page);
 }

@@ -50,6 +50,10 @@ public class Movie implements Comparable<Movie> {
     @SerializedName("vote_count")
     private Long voteCount;
 
+    private String genreNames;
+
+    private CastDetail castDetails;
+
     public Boolean getAdult() {
         return adult;
     }
@@ -106,6 +110,14 @@ public class Movie implements Comparable<Movie> {
         return voteCount;
     }
 
+    public String getGenreNames() {
+        return genreNames;
+    }
+
+    public CastDetail getCastDetails() {
+        return castDetails;
+    }
+
     public void setAdult(Boolean adult) {
         this.adult = adult;
     }
@@ -145,6 +157,10 @@ public class Movie implements Comparable<Movie> {
         this.posterPath = posterPath;
     }
 
+    public void setGenreNames(String genreNames) {
+        this.genreNames = genreNames;
+    }
+
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
@@ -159,5 +175,13 @@ public class Movie implements Comparable<Movie> {
             return 0;
         }
         return getReleaseDate().compareTo(movie.getReleaseDate());
+    }
+
+    /**
+     * Returning itself of RxJava Operation
+     */
+    public Movie setCastDetails(CastDetail castDetails) {
+        this.castDetails = castDetails;
+        return this;
     }
 }

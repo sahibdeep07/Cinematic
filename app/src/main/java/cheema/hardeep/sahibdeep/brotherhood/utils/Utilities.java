@@ -38,14 +38,6 @@ public class Utilities {
     }
 
     /**
-     * Get current date in YYYY-MM-DD format
-     */
-    public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATA_DATE_FORMAT, Locale.US);
-        return sdf.format(new Date());
-    }
-
-    /**
      * Convert Date from yyyy-MM-dd to MMM dd, yyyy
      */
     public static String convertDate(String movieDate) {
@@ -91,13 +83,6 @@ public class Utilities {
     }
 
     /**
-     * Get Week from Date
-     */
-    public static String getWeekFromDate(String date) {
-        return new SimpleDateFormat(WEEK_FORMAT, Locale.US).format(getDateFromString(date));
-    }
-
-    /**
      * Check if given date is in future
      */
     public static boolean isDateInFuture(String date) {
@@ -111,46 +96,5 @@ public class Utilities {
             Log.d(APP_NAME, "Error: " + e.getMessage());
         }
         return false;
-    }
-
-    /**
-     * Check if given date is Tomorrow
-     */
-    public static boolean isDateTomorrow(String date) {
-        Date currentDate = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATA_DATE_FORMAT, Locale.US);
-        currentDate.setDate(currentDate.getDate() + 1);
-        String tomorrowDate = sdf.format(currentDate);
-        return date.equals(tomorrowDate);
-    }
-
-    /**
-     * Generate Display Date of format {EEEE ~ MMM d, yyyy}
-     */
-    public static String generateDisplayDate(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATA_DATE_FORMAT, Locale.US);
-        SimpleDateFormat displaySdf = new SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.US);
-        try {
-            Date resultDate = sdf.parse(date);
-            return displaySdf.format(resultDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.d(APP_NAME, "Error: " + e.getMessage());
-        }
-        return date;
-    }
-
-    /**
-     * Get the minimum date from provided list of movies
-     */
-    public static String getMinMaxDateInWeek(List<Movie> movies) {
-        SimpleDateFormat sdf = new SimpleDateFormat(DISPLAY_DATE_WEEK_RANGE_FORMAT, Locale.US);
-        List<Date> dates = new ArrayList<>();
-        for (Movie movie : movies) {
-            if (Utilities.isDateInFuture(movie.getReleaseDate())) {
-                dates.add(Utilities.getDateFromString(movie.getReleaseDate()));
-            }
-        }
-        return dates.size() > 0 ? sdf.format(Collections.min(dates)) + " - " + sdf.format(Collections.max(dates)) : null;
     }
 }

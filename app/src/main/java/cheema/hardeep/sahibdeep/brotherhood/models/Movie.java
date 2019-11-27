@@ -3,9 +3,10 @@ package cheema.hardeep.sahibdeep.brotherhood.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Movie {
+public class Movie implements Comparable<Movie> {
 
     @Expose
     private Boolean adult;
@@ -103,5 +104,60 @@ public class Movie {
 
     public Long getVoteCount() {
         return voteCount;
+    }
+
+    public void setAdult(Boolean adult) {
+        this.adult = adult;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public void setGenreIds(List<Genre> genres) {
+        this.genreIds = new ArrayList<>();
+        for (Genre genre : genres) {
+            this.genreIds.add(genre.getId());
+        }
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setPopularity(Double popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public int compareTo(Movie movie) {
+        if (getReleaseDate() == null || movie.getReleaseDate() == null) {
+            return 0;
+        }
+        return getReleaseDate().compareTo(movie.getReleaseDate());
     }
 }

@@ -20,13 +20,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cheema.hardeep.sahibdeep.brotherhood.Brotherhood;
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.adapters.MovieAdapter;
 import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.SharedPreferenceProvider;
+import cheema.hardeep.sahibdeep.brotherhood.models.CallerType;
 import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
+import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.models.TopRated;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -36,16 +40,28 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.EN_US;
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HI;
 
 public class RecommendedFragment extends Fragment {
+
+    @BindView(R.id.homeName)
     TextView name;
+
+    @BindView(R.id.progressBar)
     ProgressBar recommendedProgressBar;
+
+    @BindView(R.id.yourGenreRV)
     RecyclerView genresRecyclerView;
+
+    @BindView(R.id.yourActorsRV)
     RecyclerView actorsRecyclerView;
+
+    @BindView(R.id.yourFavouriteRV)
     RecyclerView favouritesRecyclerView;
 
+    @BindView(R.id.noFavoritesMessage)
+    TextView noFavoriteMessage;
 
-    MovieAdapter genreAdapter = new MovieAdapter();
-    MovieAdapter actorAdapter = new MovieAdapter();
-    MovieAdapter favoriteAdapter = new MovieAdapter();
+    private MovieAdapter genreAdapter = new MovieAdapter(CallerType.RECOMMENDED);
+    private MovieAdapter actorAdapter = new MovieAdapter(CallerType.RECOMMENDED);
+    private MovieAdapter favoriteAdapter = new MovieAdapter(CallerType.RECOMMENDED);
 
     @Inject
     CompositeDisposable compositeDisposable;
@@ -63,22 +79,24 @@ public class RecommendedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommended, container, false);
         view.findViewById(R.id.homeName);
-        name = view.findViewById(R.id.homeName);
-        recommendedProgressBar = view.findViewById(R.id.progressBar);
-        genresRecyclerView = view.findViewById(R.id.yourGenreRV);
-        actorsRecyclerView = view.findViewById(R.id.yourActorsRV);
-        favouritesRecyclerView = view.findViewById(R.id.yourFavouriteRV);
+        ButterKnife.bind(this, view);
         name.setText(HI + SharedPreferenceProvider.getUserName(getContext()));
 
         setRecyclerView(genresRecyclerView, genreAdapter);
         setRecyclerView(actorsRecyclerView, actorAdapter);
         setRecyclerView(favouritesRecyclerView, favoriteAdapter);
 
-        requestTopRatedMovies();
         return view;
     }
 
-    public void setIsProgressBarVisible(boolean visible) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestTopRatedMovies();
+        requestFavorites();
+    }
+
+    private void setIsProgressBarVisible(boolean visible) {
         recommendedProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
         genresRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
@@ -91,7 +109,7 @@ public class RecommendedFragment extends Fragment {
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
                         .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
-                                topRated -> handleGenreResponse(topRated),
+                                this::handleGenreResponse,
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error in getting the Top Rated" + throwable)
                         )
         );
@@ -100,15 +118,27 @@ public class RecommendedFragment extends Fragment {
     private void handleGenreResponse(TopRated topRated) {
         List<Movie> topRatedList = topRated.getResults();
         actorAdapter.updateDataSet(topRatedList);
-        genreAdapter.updateDataSet(getActorsList(topRatedList, SharedPreferenceProvider.getUserGenres(getContext())));;
+        genreAdapter.updateDataSet(getUserGenreMovies(topRatedList, SharedPreferenceProvider.getUserGenres(getContext())));;
     }
 
-    public void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
+    private void requestFavorites() {
+        List<Movie> favoriteMovies = convertMovieDetailToMovie(SharedPreferenceProvider.getUserFavorites(getContext()));
+        if(favoriteMovies.isEmpty()) {
+            favouritesRecyclerView.setVisibility(View.GONE);
+            noFavoriteMessage.setVisibility(View.VISIBLE);
+        } else {
+            noFavoriteMessage.setVisibility(View.GONE);
+            favouritesRecyclerView.setVisibility(View.VISIBLE);
+            favoriteAdapter.updateDataSet(favoriteMovies);
+        }
+    }
+
+    private void setRecyclerView(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
     }
 
-    private List<Movie> getActorsList (List<Movie> movieList, List<Genre> genreList){
+    private List<Movie> getUserGenreMovies(List<Movie> movieList, List<Genre> genreList){
         HashSet<Movie> genreMovieHash = new HashSet<>();
         for(Movie movie: movieList) {
             for(long genreID: movie.getGenreIds()){
@@ -120,5 +150,13 @@ public class RecommendedFragment extends Fragment {
             }
         }
         return  new ArrayList<>(genreMovieHash) ;
+    }
+
+    private List<Movie> convertMovieDetailToMovie(List<MovieDetail> movieDetails) {
+        List<Movie> movies = new ArrayList<>();
+        for (MovieDetail movieDetail : movieDetails) {
+            movies.add(movieDetail.convertToMovie());
+        }
+        return movies;
     }
 }

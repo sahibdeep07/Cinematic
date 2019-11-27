@@ -172,4 +172,18 @@ public class MovieDetail {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public Movie convertToMovie() {
+        Movie movie = new Movie();
+        movie.setId(id);
+        movie.setAdult(adult);
+        movie.setBackdropPath(backdropPath);
+        movie.setGenreIds(genres);
+        movie.setOriginalLanguage(originalLanguage);
+        movie.setOriginalTitle(originalTitle);
+        movie.setPosterPath(posterPath);
+        movie.setReleaseDate(releaseDate);
+        movie.setTitle(title);
+        return movie;
+    }
 }

@@ -17,4 +17,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/icon_action" />
 
+    <TextView
+        android:id="@+id/castName"
+        android:layout_width="120dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="16sp"
+        android:typeface="serif"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/castImage"
+        tools:text="Documentary" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

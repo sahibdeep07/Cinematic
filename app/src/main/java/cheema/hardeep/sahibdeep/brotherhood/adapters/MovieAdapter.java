@@ -18,8 +18,8 @@ import java.util.List;
 
 import cheema.hardeep.sahibdeep.brotherhood.R;
 import cheema.hardeep.sahibdeep.brotherhood.activities.DetailActivity;
+import cheema.hardeep.sahibdeep.brotherhood.models.CallerType;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
-import cheema.hardeep.sahibdeep.brotherhood.models.MovieDetail;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.ROUNDED_CORNER_UPCOMING;
@@ -28,6 +28,11 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovieViewHolder> {
 
     private List<Movie> movies = new ArrayList<>();
+    private CallerType callerType;
+
+    public MovieAdapter(CallerType callerType) {
+        this.callerType = callerType;
+    }
 
     public void updateDataSet(List<Movie> upcomingMovies) {
         movies.clear();
@@ -38,7 +43,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
     @NonNull
     @Override
     public UpcomingMovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.upcoming_item_movie, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movie_item, viewGroup, false);
         return new UpcomingMovieViewHolder(view);
     }
 
@@ -46,11 +51,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
     public void onBindViewHolder(@NonNull UpcomingMovieViewHolder upcomingMovieViewHolder, int i) {
         Movie movie = movies.get(i);
         upcomingMovieViewHolder.movieName.setText(movie.getTitle());
-        upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
+
+        if(movie.getVoteAverage() != null && !callerType.isUpcoming()) {
+            upcomingMovieViewHolder.movieRating.setText(String.valueOf(movie.getVoteAverage()));
+        } else {
+            upcomingMovieViewHolder.movieRating.setVisibility(View.GONE);
+        }
+
         loadImageWithGlide(movie.getBackdropPath(), upcomingMovieViewHolder.movieImage);
 
         upcomingMovieViewHolder.itemView.setOnClickListener(v ->
-                v.getContext().startActivity(DetailActivity.createIntent(v.getContext(), movie.getId())));
+                v.getContext().startActivity(DetailActivity.createIntent(v.getContext(), movie.getId(), callerType.isNowPlaying())));
     }
 
     private void loadImageWithGlide(String url, ImageView imageView) {

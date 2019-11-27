@@ -51,6 +51,7 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_342;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String KEY_MOVIE_ID = "movie-id";
+    private static final String KEY_SHOW_BOOKING = "show-booking";
     private static final int ANIMATION_DURATION = 3000;
 
     @BindView(R.id.detailProgressBar)
@@ -109,9 +110,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private MovieDetail movieDetail;
 
-    public static Intent createIntent(Context context, Long movieId) {
+    public static Intent createIntent(Context context, Long movieId, boolean showBooking) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra(KEY_MOVIE_ID, movieId);
+        intent.putExtra(KEY_SHOW_BOOKING, showBooking);
         return intent;
     }
 
@@ -128,21 +130,26 @@ public class DetailActivity extends AppCompatActivity {
 
         requestMovieDetails();
         attachClickListeners();
+
         requestLocation();
     }
 
     private void requestLocation() {
-        locationService.requestSingleLocation(new LocationService.LocationProvider() {
-            @Override
-            public void onLocation(Location location) {
-                enableLocationFeature(true);
-            }
+        if (getIntent().getBooleanExtra(KEY_SHOW_BOOKING, false)) {
+            locationService.requestSingleLocation(new LocationService.LocationProvider() {
+                @Override
+                public void onLocation(Location location) {
+                    enableLocationFeature(true);
+                }
 
-            @Override
-            public void onLocationFailure() {
-                enableLocationFeature(false);
-            }
-        });
+                @Override
+                public void onLocationFailure() {
+                    enableLocationFeature(false);
+                }
+            });
+        } else {
+            enableLocationFeature(false);
+        }
     }
 
     @Override

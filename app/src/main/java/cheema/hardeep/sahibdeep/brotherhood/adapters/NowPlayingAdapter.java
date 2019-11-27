@@ -42,16 +42,6 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.No
         notifyDataSetChanged();
     }
 
-//    public void extractGenres(List<Movie> nowPlayingMovies){
-//        movies.clear();
-//        for (Movie movie : nowPlayingMovies) {
-//            List<Long> genreID = movie.getGenreIds();
-//            for (Long id : genreID) {
-//
-//            }
-//        }
-//    }
-
     @NonNull
     @Override
     public NowPlayingAdapter.NowPlayingViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -68,7 +58,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.No
         holder.movieGenre.setText(movie.getGenreNames());
 
         holder.itemView.setOnClickListener(v ->
-                v.getContext().startActivity(DetailActivity.createIntent(v.getContext(), movie.getId())));
+                v.getContext().startActivity(DetailActivity.createIntent(v.getContext(), movie.getId(), true)));
     }
 
     private void loadImageWithGlide(String url, ImageView imageView) {

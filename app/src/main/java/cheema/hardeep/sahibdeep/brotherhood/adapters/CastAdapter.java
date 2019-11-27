@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +21,7 @@ import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 
 import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.SIZE_92;
 
-public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ActorViewHolder> {
+public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder> {
 
     private List<Cast> castList;
 
@@ -29,15 +30,16 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ActorViewHolde
     }
 
     @Override
-    public ActorViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cast_item, viewGroup ,false);
-        return new ActorViewHolder(v);
+    public CastViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cast_item, viewGroup, false);
+        return new CastViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ActorViewHolder actorViewHolder, int i) {
+    public void onBindViewHolder(@NonNull CastViewHolder castViewHolder, int i) {
         Cast cast = castList.get(i);
-        setUpActorImage(actorViewHolder.castImage, cast);
+        castViewHolder.castName.setText(cast.getName());
+        setUpActorImage(castViewHolder.castImage, cast);
     }
 
     private void setUpActorImage(@NonNull ImageView imageView, Cast cast) {
@@ -52,12 +54,14 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ActorViewHolde
         return castList.size();
     }
 
-    class ActorViewHolder extends RecyclerView.ViewHolder{
+    class CastViewHolder extends RecyclerView.ViewHolder {
         ImageView castImage;
+        TextView castName;
 
-        public ActorViewHolder(@NonNull View itemView) {
+        public CastViewHolder(@NonNull View itemView) {
             super(itemView);
             castImage = itemView.findViewById(R.id.castImage);
+            castName = itemView.findViewById(R.id.castName);
         }
     }
 }

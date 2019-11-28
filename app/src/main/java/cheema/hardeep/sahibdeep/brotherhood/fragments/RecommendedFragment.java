@@ -132,6 +132,7 @@ public class RecommendedFragment extends Fragment {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doFinally(() -> setIsProgressBarVisible(false))
                         .subscribe(
                                 this::handleTopRatedForBoth,
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), ON_ERROR_TOP_RATED + throwable)
@@ -145,6 +146,7 @@ public class RecommendedFragment extends Fragment {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doFinally(() -> setIsProgressBarVisible(false))
                         .subscribe(
                                 this::handleTopRatedForGenre,
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), ON_ERROR_TOP_RATED + throwable)
@@ -158,6 +160,7 @@ public class RecommendedFragment extends Fragment {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doFinally(() -> setIsProgressBarVisible(false))
                         .subscribe(
                                 this::handleTopRatedForActor,
                                 throwable -> Log.e(RecommendedFragment.class.getSimpleName(), ON_ERROR_TOP_RATED + throwable)

@@ -37,9 +37,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.UpcomingMovi
         this.callerType = callerType;
     }
 
-    public void updateDataSet(List<Movie> upcomingMovies) {
-        movies.clear();
-        movies.addAll(upcomingMovies);
+    public void updateDataSet(List<Movie> movies) {
+        this.movies.clear();
+        this.movies.addAll(movies);
+        notifyDataSetChanged();
+    }
+
+    public void addToDataSet(List<Movie> movies) {
+        this.movies.addAll(movies);
         notifyDataSetChanged();
     }
 

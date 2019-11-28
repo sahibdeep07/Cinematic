@@ -18,7 +18,7 @@ public interface MovieApi {
     Observable<GenreResponse> getGenre(@Query("language") String language);
 
     @GET("movie/top_rated")
-    Observable<TopRated> getTopRated(@Query("language") String language);
+    Observable<TopRated> getTopRated(@Query("language") String language, @Query("page") int page);
 
     @GET("person/popular")
     Observable<ActorResponse> getActors(@Query("language") String language);

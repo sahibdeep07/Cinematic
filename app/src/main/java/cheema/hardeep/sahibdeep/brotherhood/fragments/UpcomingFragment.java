@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -34,6 +35,7 @@ import cheema.hardeep.sahibdeep.brotherhood.models.CallerType;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.Upcoming;
 import cheema.hardeep.sahibdeep.brotherhood.models.UpcomingData;
+import cheema.hardeep.sahibdeep.brotherhood.utils.PaginationListener;
 import cheema.hardeep.sahibdeep.brotherhood.utils.Utilities;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -59,6 +61,7 @@ public class UpcomingFragment extends Fragment {
     CompositeDisposable compositeDisposable;
 
     private MovieAdapter movieAdapter;
+    private int currentPage = 3;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,10 +74,24 @@ public class UpcomingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
         ButterKnife.bind(this, view);
-        upcomingRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMNS_COUNT));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), COLUMNS_COUNT);
+        upcomingRecyclerView.setLayoutManager(gridLayoutManager);
         movieAdapter = new MovieAdapter(CallerType.UPCOMING);
         upcomingRecyclerView.setAdapter(movieAdapter);
+        setUpPagination(gridLayoutManager);
         return view;
+    }
+
+    private void setUpPagination(GridLayoutManager gridLayoutManager) {
+        upcomingRecyclerView.addOnScrollListener(new PaginationListener(gridLayoutManager) {
+
+            @Override
+            protected void loadMoreItems() {
+                currentPage++;
+                requestUpcomingWithPagination();
+            }
+
+        });
     }
 
     @Override
@@ -100,9 +117,7 @@ public class UpcomingFragment extends Fragment {
                         movieApi.getUpcomingMovies(EN_US, 1),
                         movieApi.getUpcomingMovies(EN_US, 2),
                         movieApi.getUpcomingMovies(EN_US, 3),
-                        movieApi.getUpcomingMovies(EN_US, 4),
-                        movieApi.getUpcomingMovies(EN_US, 5),
-                        (upcoming, upcoming2, upcoming3, upcoming4, upcoming5) -> Arrays.asList(upcoming, upcoming2, upcoming3, upcoming4, upcoming5))
+                        (upcoming, upcoming2, upcoming3) -> Arrays.asList(upcoming, upcoming2, upcoming3))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
@@ -114,7 +129,29 @@ public class UpcomingFragment extends Fragment {
         );
     }
 
+    private void requestUpcomingWithPagination() {
+        compositeDisposable.add(
+                        movieApi.getUpcomingMovies(EN_US, currentPage).toList()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doOnTerminate(() -> setIsProgressBarVisible(false))
+                        .subscribe(
+                                this::handleUpcomingDataWithPagination,
+                                throwable -> Log.e(UpcomingFragment.class.getSimpleName(), throwable.getMessage())
+                        )
+        );
+    }
+
     private void handleUpcomingMovieData(List<Upcoming> data) {
+        movieAdapter.updateDataSet(filterUpcomingWithFuture(data));
+    }
+
+    private void handleUpcomingDataWithPagination(List<Upcoming> upcoming) {
+        movieAdapter.addToDataSet(filterUpcomingWithFuture(upcoming));
+    }
+
+    private List<Movie> filterUpcomingWithFuture(List<Upcoming> data) {
         List<Movie> movies = new ArrayList<>();
         for (Upcoming upcoming : data) {
             for (Movie movie : upcoming.getResults()) {
@@ -124,6 +161,6 @@ public class UpcomingFragment extends Fragment {
             }
         }
         Collections.sort(movies);
-        movieAdapter.updateDataSet(movies);
+        return movies;
     }
 }

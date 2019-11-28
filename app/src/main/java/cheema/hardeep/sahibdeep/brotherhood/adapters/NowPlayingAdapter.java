@@ -58,6 +58,11 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.No
         notifyDataSetChanged();
     }
 
+    public void addToDataSet(List<Movie> nowPlayingMovies) {
+        movies.addAll(nowPlayingMovies);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public NowPlayingAdapter.NowPlayingViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

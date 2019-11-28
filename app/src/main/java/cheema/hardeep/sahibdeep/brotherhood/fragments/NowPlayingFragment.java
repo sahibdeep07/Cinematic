@@ -32,6 +32,7 @@ import cheema.hardeep.sahibdeep.brotherhood.models.Genre;
 import cheema.hardeep.sahibdeep.brotherhood.models.GenreResponse;
 import cheema.hardeep.sahibdeep.brotherhood.models.Movie;
 import cheema.hardeep.sahibdeep.brotherhood.models.NowPlaying;
+import cheema.hardeep.sahibdeep.brotherhood.utils.PaginationListener;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -43,6 +44,8 @@ import static cheema.hardeep.sahibdeep.brotherhood.utils.Constants.HI;
 
 
 public class NowPlayingFragment extends Fragment {
+
+    private static final String NOW_PLAYING_ERROR = "onFailure: Error in getting the Now Playing";
 
     @Inject
     MovieApi movieApi;
@@ -66,6 +69,8 @@ public class NowPlayingFragment extends Fragment {
     ProgressBar nowPlayingProgressBar;
 
     private NowPlayingAdapter nowPlayingAdapter;
+    private GenreResponse genreResponse;
+    private int currentPage = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,11 +85,25 @@ public class NowPlayingFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         name.setText(HI + userInfoManager.getUserName());
-        nowPlayingRV.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        nowPlayingRV.setLayoutManager(linearLayoutManager);
         nowPlayingAdapter = new NowPlayingAdapter(locationService);
         nowPlayingRV.setAdapter(nowPlayingAdapter);
+        setUpPagination(linearLayoutManager);
         requestNowPlayingMoviesWithGenres();
         return view;
+    }
+
+    private void setUpPagination(LinearLayoutManager linearLayoutManager) {
+        nowPlayingRV.addOnScrollListener(new PaginationListener(linearLayoutManager) {
+
+            @Override
+            protected void loadMoreItems() {
+                currentPage++;
+                requestNowPlayingMoviesWithPagination();
+            }
+
+        });
     }
 
     private void requestNowPlayingMoviesWithGenres() {
@@ -92,6 +111,7 @@ public class NowPlayingFragment extends Fragment {
                 movieApi.getNowPlaying(EN_US, 1),
                 movieApi.getGenre(EN_US),
                 (nowPlaying, genreResponse) -> {
+                    this.genreResponse = genreResponse;
                     updateMoviesWithGenreNames(nowPlaying, genreResponse);
                     return nowPlaying;
                 }
@@ -102,7 +122,25 @@ public class NowPlayingFragment extends Fragment {
                         .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
                                 this::handleNowPlayingResponse,
-                                throwable -> Log.e(RecommendedFragment.class.getSimpleName(), "onFailure: Error in getting the Top Rated" + throwable)
+                                throwable -> Log.e(RecommendedFragment.class.getSimpleName(), NOW_PLAYING_ERROR + throwable)
+                        )
+        );
+    }
+
+    private void requestNowPlayingMoviesWithPagination() {
+        compositeDisposable.add(
+                movieApi.getNowPlaying(EN_US, currentPage)
+                        .map(nowPlaying -> {
+                            updateMoviesWithGenreNames(nowPlaying, genreResponse);
+                            return nowPlaying;
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doOnTerminate(() -> setIsProgressBarVisible(false))
+                        .subscribe(
+                                this::handleAddToNowPlayingResponse,
+                                throwable -> Log.e(RecommendedFragment.class.getSimpleName(), NOW_PLAYING_ERROR + throwable)
                         )
         );
     }
@@ -127,7 +165,10 @@ public class NowPlayingFragment extends Fragment {
     }
 
     private void handleNowPlayingResponse(NowPlaying nowPlaying) {
-        List<Movie> nowPlayingList = nowPlaying.getResults();
-        nowPlayingAdapter.updateDataSet(nowPlayingList);
+        nowPlayingAdapter.updateDataSet(nowPlaying.getResults());
+    }
+
+    private void handleAddToNowPlayingResponse(NowPlaying nowPlaying) {
+        nowPlayingAdapter.addToDataSet(nowPlaying.getResults());
     }
 }

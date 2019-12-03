@@ -38,6 +38,11 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ActorViewHol
         notifyDataSetChanged();
     }
 
+    public void addItems(List<Actor> actorList) {
+        this.actorList.addAll(actorList);
+        notifyDataSetChanged();
+    }
+
     public ArrayList<Actor> getUpdatedList() {
         return actorList;
     }

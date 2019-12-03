@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import cheema.hardeep.sahibdeep.brotherhood.api.MovieApi;
 import cheema.hardeep.sahibdeep.brotherhood.database.UserInfoManager;
 import cheema.hardeep.sahibdeep.brotherhood.models.Actor;
 import cheema.hardeep.sahibdeep.brotherhood.models.ActorResponse;
+import cheema.hardeep.sahibdeep.brotherhood.utils.PaginationListener;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -72,6 +74,7 @@ public class ActorActivity extends AppCompatActivity {
     UserInfoManager userInfoManager;
 
     private ActorAdapter actorAdapter;
+    private int currentPage;
 
 
     public static Intent createIntent(Context context) {
@@ -116,26 +119,64 @@ public class ActorActivity extends AppCompatActivity {
     }
 
     void setupRecyclerView() {
-        actorsRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        actorsRecyclerView.setLayoutManager(gridLayoutManager);
         actorAdapter = new ActorAdapter(true);
         actorsRecyclerView.setAdapter(actorAdapter);
+        setUpPagination(gridLayoutManager);
+    }
+
+    private void setUpPagination(GridLayoutManager gridLayoutManager) {
+        actorsRecyclerView.addOnScrollListener(new PaginationListener(gridLayoutManager) {
+
+            @Override
+            protected void loadMoreItems() {
+                currentPage++;
+                requestActorsPagination();
+            }
+
+        });
     }
 
     private void requestActors() {
         compositeDisposable.add(
-                movieApi.getActors(EN_US)
+                movieApi.getActors(EN_US, 1)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
                         .doOnTerminate(() -> setIsProgressBarVisible(false))
                         .subscribe(
-                                actorResponse -> handleActorResponse(actorResponse),
+                                this::handleActorResponse,
+                                throwable -> Log.e(ActorResponse.class.getSimpleName(), "onFailure: Error in getting the actors" + throwable)
+                        )
+        );
+    }
+
+    private void requestActorsPagination() {
+        compositeDisposable.add(
+                movieApi.getActors(EN_US, currentPage)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(disposable -> setIsProgressBarVisible(true))
+                        .doOnTerminate(() -> setIsProgressBarVisible(false))
+                        .subscribe(
+                                this::handleActorResponsePagination,
                                 throwable -> Log.e(ActorResponse.class.getSimpleName(), "onFailure: Error in getting the actors" + throwable)
                         )
         );
     }
 
     private void handleActorResponse(ActorResponse actorResponse) {
+        processActorResponse(actorResponse);
+        actorAdapter.update(actorResponse.getActors());
+    }
+
+    private void handleActorResponsePagination(ActorResponse actorResponse) {
+        processActorResponse(actorResponse);
+        actorAdapter.addItems(actorResponse.getActors());
+    }
+
+    private void processActorResponse(ActorResponse actorResponse) {
         List<Actor> userActors = userInfoManager.getUserActors();
         for (Actor actor : actorResponse.getActors()) {
             //Pre Select Genre if already in SharedPreferences
@@ -147,7 +188,6 @@ public class ActorActivity extends AppCompatActivity {
                 }
             }
         }
-        actorAdapter.update(actorResponse.getActors());
     }
 
     private void handleHomeClick() {

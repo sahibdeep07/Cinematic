@@ -118,9 +118,11 @@ public class UserInfoManager {
      * provided favorite and save it
      */
     public void addUserFavorite(MovieDetail movieDetail) {
-        UserInfo userInfo = getUserInfo();
-        userInfo.getFavoritesList().add(movieDetail);
-        saveUserInfo(userInfo);
+        if (movieDetail != null) {
+            UserInfo userInfo = getUserInfo();
+            userInfo.getFavoritesList().add(movieDetail);
+            saveUserInfo(userInfo);
+        }
     }
 
     /**

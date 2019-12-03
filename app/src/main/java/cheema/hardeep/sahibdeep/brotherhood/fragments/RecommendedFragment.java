@@ -293,7 +293,9 @@ public class RecommendedFragment extends Fragment {
     private List<Movie> convertMovieDetailToMovie(List<MovieDetail> movieDetails) {
         List<Movie> movies = new ArrayList<>();
         for (MovieDetail movieDetail : movieDetails) {
-            movies.add(movieDetail.convertToMovie());
+            if(movieDetail != null) {
+                movies.add(movieDetail.convertToMovie());
+            }
         }
         return movies;
     }

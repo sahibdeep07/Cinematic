@@ -245,7 +245,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void setUpView() {
         for (MovieDetail userFavorite : userInfoManager.getUserFavorites()) {
-            if (userFavorite.getId().equals(movieDetail.getId())) {
+            if (movieDetail != null && userFavorite.getId().equals(movieDetail.getId())) {
                 updateFavoriteIcon(true);
                 return;
             }

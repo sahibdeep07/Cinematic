@@ -214,6 +214,7 @@ public class ActorActivity extends AppCompatActivity {
         if (userInfoManager.isFirstLaunch()) {
             startActivity(HomeActivity.createIntent(this));
             userInfoManager.saveFirstLaunchCompleted();
+            finishAffinity();
         } else {
             finish();
         }

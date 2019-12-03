@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    xmlns:tools="http://schemas.android.com/tools"
     package="cheema.hardeep.sahibdeep.brotherhood">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,9 +12,9 @@
     <application
         android:name=".Brotherhood"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/cinematic_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/cinematic_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         android:usesCleartextTraffic="true">
